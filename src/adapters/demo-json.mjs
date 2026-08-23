@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { hashSource } from '../core/hash.mjs';
-import { readJsonLines, writeJsonLines } from '../core/jsonl.mjs';
+import { readJsonLines, readJsonLinesIfPresent, writeJsonLines } from '../core/jsonl.mjs';
 import { extractProtectedTokens } from '../core/segments.mjs';
 
 function filesFor(project) {
@@ -47,7 +47,7 @@ const adapter = {
     for (const item of filesFor(project)) {
       const sourceFile = path.join(project.paths.work, 'extracted', item.path);
       const outputFile = path.join(project.paths.translations, item.translation ?? `${item.path}.jsonl`);
-      const existing = new Map(readJsonLines(outputFile).map((row) => [row.id, row]));
+      const existing = new Map(readJsonLinesIfPresent(outputFile).map((row) => [row.id, row]));
       const document = JSON.parse(fs.readFileSync(sourceFile, 'utf8'));
       const rows = getEntries(document, item.root).map((entry, index) => {
         const id = `${item.id}:${entry.id ?? index}`;

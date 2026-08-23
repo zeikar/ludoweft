@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export function readJsonLines(file) {
-  if (!fs.existsSync(file)) return [];
+function parseJsonLines(file) {
   const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
   const rows = [];
   for (let index = 0; index < lines.length; index += 1) {
@@ -15,6 +14,17 @@ export function readJsonLines(file) {
     }
   }
   return rows;
+}
+
+// Callers that require a workspace file: a missing one must not read as "no segments".
+export function readJsonLines(file) {
+  if (!fs.existsSync(file)) throw new Error(`translation file not found: ${file}`);
+  return parseJsonLines(file);
+}
+
+// Only for export, which legitimately creates the file on its first run.
+export function readJsonLinesIfPresent(file) {
+  return fs.existsSync(file) ? parseJsonLines(file) : [];
 }
 
 export function writeJsonLines(file, rows) {
