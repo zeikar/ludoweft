@@ -1,0 +1,25 @@
+{
+  "name": "ludoweft",
+  "version": "0.0.1",
+  "description": "An agent-native pipeline for extracting, translating, validating, and rebuilding game resources.",
+  "type": "module",
+  "bin": {
+    "ludoweft": "./bin/ludoweft.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node ./bin/ludoweft.mjs pipeline --project ./examples/demo/ludoweft.project.json",
+    "validate:demo": "node ./bin/ludoweft.mjs validate --project ./examples/demo/ludoweft.project.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "agent",
+    "game-localization",
+    "localization",
+    "modding",
+    "translation"
+  ],
+  "license": "MIT"
+}

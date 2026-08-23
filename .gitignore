@@ -1,0 +1,12 @@
+node_modules/
+.ludoweft/
+dist/
+coverage/
+*.local.json
+*.log
+
+# Never commit extracted or rebuilt commercial game data at the repository root.
+/game-data/
+/backups/
+/work/
+/tools/

@@ -1,0 +1,16 @@
+{
+  "scenes": [
+    {
+      "id": "intro",
+      "speaker": "Guide",
+      "text": "Welcome, {player}!",
+      "ja": "ようこそ、{player}！"
+    },
+    {
+      "id": "gate",
+      "speaker": "Guard",
+      "text": "The gate opens at 09:00.",
+      "ja": "ゲートは09:00に開く。"
+    }
+  ]
+}

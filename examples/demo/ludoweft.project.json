@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "ludoweft-demo-ko",
+  "adapter": "demo-json",
+  "languages": {
+    "source": "en",
+    "reference": "ja",
+    "target": "ko"
+  },
+  "paths": {
+    "source": "./game-data",
+    "work": "./.ludoweft/work",
+    "translations": "./translations",
+    "output": "./dist"
+  },
+  "adapterConfig": {
+    "files": [
+      {
+        "id": "dialogue",
+        "path": "dialogue.json",
+        "translation": "dialogue.jsonl",
+        "root": "scenes",
+        "text": "text",
+        "reference": "ja",
+        "speaker": "speaker"
+      }
+    ]
+  }
+}

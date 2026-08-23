@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ludoweft.dev/schemas/project.schema.json",
+  "title": "Ludoweft project",
+  "type": "object",
+  "required": ["schemaVersion", "id", "adapter", "languages", "paths"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+    "adapter": { "type": "string", "minLength": 1 },
+    "languages": {
+      "type": "object",
+      "required": ["source", "target"],
+      "properties": {
+        "source": { "type": "string", "minLength": 2 },
+        "reference": { "type": "string", "minLength": 2 },
+        "target": { "type": "string", "minLength": 2 }
+      },
+      "additionalProperties": false
+    },
+    "paths": {
+      "type": "object",
+      "required": ["source", "work", "translations", "output"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "work": { "type": "string", "minLength": 1 },
+        "translations": { "type": "string", "minLength": 1 },
+        "output": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "localConfig": { "type": "string", "minLength": 1 },
+    "adapterConfig": { "type": "object" }
+  },
+  "additionalProperties": true
+}

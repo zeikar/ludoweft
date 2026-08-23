@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ludoweft.dev/schemas/segment.schema.json",
+  "title": "Ludoweft translation segment",
+  "type": "object",
+  "required": ["id", "source", "target", "sourceHash"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "source": { "type": "string" },
+    "reference": { "type": "string" },
+    "target": { "type": "string" },
+    "sourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "protectedTokens": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "context": { "type": "object" },
+    "status": {
+      "enum": ["untranslated", "draft", "translated", "reviewed", "blocked"]
+    },
+    "translatedBy": { "type": "string" },
+    "reviewedBy": { "type": "string" }
+  },
+  "additionalProperties": true
+}
