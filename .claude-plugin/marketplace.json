@@ -1,0 +1,15 @@
+{
+  "name": "ludoweft",
+  "description": "Agent-native game localization tooling: extract, translate, validate, and rebuild moddable game resources.",
+  "owner": {
+    "name": "zeikar",
+    "url": "https://github.com/zeikar"
+  },
+  "plugins": [
+    {
+      "name": "ludoweft",
+      "description": "Extract, translate, review, validate, and rebuild authorized moddable game resources through a deterministic CLI.",
+      "source": "./"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ Ludoweft separates deterministic resource operations from probabilistic translat
 1. **Core CLI** loads a project, validates the manifest and translation workspace, and dispatches lifecycle stages.
 2. **Adapters** understand one resource format or engine family and implement `inspect`, `extract`, `export`, `apply`, `build`, and `verify`.
 3. **Translation workspace** stores stable, reviewable JSONL segments independent of the source archive format.
-4. **Agent skill** tells a coding agent how to plan, translate, review, and invoke quality gates.
+4. **Agent skill** tells a coding agent how to plan, translate, review, and invoke quality gates. One skill serves every host; each host contributes only its own plugin manifest.
 5. **Private game project** holds the profile, translations, local secrets, and game-specific exceptions.
 
 ```text

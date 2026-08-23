@@ -6,9 +6,30 @@ import path from 'node:path';
 import test from 'node:test';
 import { repoRoot } from './helpers.mjs';
 
-const manifest = JSON.parse(fs.readFileSync(path.join(repoRoot, '.codex-plugin/plugin.json'), 'utf8'));
-const marketplace = JSON.parse(fs.readFileSync(path.join(repoRoot, '.agents/plugins/marketplace.json'), 'utf8'));
-const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+const read = (file) => JSON.parse(fs.readFileSync(path.join(repoRoot, file), 'utf8'));
+
+const manifest = read('.codex-plugin/plugin.json');
+const marketplace = read('.agents/plugins/marketplace.json');
+const claudeManifest = read('.claude-plugin/plugin.json');
+const claudeMarketplace = read('.claude-plugin/marketplace.json');
+const packageJson = read('package.json');
+
+test('every manifest carries the same name and version as the npm package', () => {
+  for (const [label, m] of [['codex', manifest], ['claude', claudeManifest]]) {
+    assert.equal(m.name, packageJson.name, `${label} manifest name`);
+    assert.equal(m.version, packageJson.version, `${label} manifest version`);
+  }
+});
+
+test('the Claude Code plugin is discoverable from its own marketplace', () => {
+  // The repository is both the plugin and the marketplace that offers it.
+  assert.equal(claudeMarketplace.name, claudeManifest.name);
+  assert.deepEqual(claudeMarketplace.plugins.map((plugin) => plugin.name), [claudeManifest.name]);
+  assert.equal(claudeMarketplace.plugins[0].source, './');
+  // Claude Code discovers skills at the plugin root, so the manifest declares no custom path.
+  assert.equal(claudeManifest.skills, undefined);
+  assert.ok(fs.existsSync(path.join(repoRoot, 'skills/ludoweft-localize/SKILL.md')));
+});
 
 test('Codex plugin metadata matches the npm package', () => {
   assert.equal(manifest.name, packageJson.name);

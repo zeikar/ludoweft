@@ -1,12 +1,14 @@
 {
   "name": "ludoweft",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An agent-native pipeline for extracting, translating, validating, and rebuilding game resources.",
   "type": "module",
   "bin": {
     "ludoweft": "./bin/ludoweft.mjs"
   },
   "files": [
+    ".claude-plugin",
+    ".codex-plugin",
     "bin",
     "examples",
     "schemas",

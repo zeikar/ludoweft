@@ -1,6 +1,6 @@
 ---
 name: ludoweft-localize
-description: Orchestrate file-based game localization projects with Ludoweft, including resource inspection, extraction, JSONL translation, review, validation, and rebuilding. Use when a project contains ludoweft.project.json or the user asks Codex to localize authorized moddable game resources; do not use for runtime OCR or text-hook translation.
+description: Orchestrate file-based game localization projects with Ludoweft, including resource inspection, extraction, JSONL translation, review, validation, and rebuilding. Use when a project contains ludoweft.project.json or the user asks to localize, translate, or rebuild authorized moddable game resources; do not use for runtime OCR or text-hook translation.
 ---
 
 # Ludoweft localization
@@ -9,7 +9,12 @@ Use Ludoweft as the deterministic boundary for resource operations while applyin
 
 ## Use the bundled CLI
 
-This skill ships with the Ludoweft CLI; do not require a global npm installation. Resolve this skill's directory from the `SKILL.md` source path provided by Codex, then invoke `scripts/ludoweft.mjs` with Node.js 20 or newer. Run the command with the localization project as the working directory.
+This skill ships with the Ludoweft CLI; do not require a global npm installation. Invoke `scripts/ludoweft.mjs` from this skill's own directory with Node.js 20 or newer, and run it with the localization project as the working directory.
+
+Resolve the skill directory from whichever the host provides:
+
+- `${CLAUDE_PLUGIN_ROOT}/skills/ludoweft-localize` when that variable is set.
+- Otherwise the directory this `SKILL.md` was loaded from.
 
 ```text
 node <skill-directory>/scripts/ludoweft.mjs inspect --project ./ludoweft.project.json
