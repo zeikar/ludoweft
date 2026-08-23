@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node --test",
     "demo": "node ./bin/ludoweft.mjs pipeline --project ./examples/demo/ludoweft.project.json",
+    "plugin:smoke": "node ./skills/ludoweft-localize/scripts/ludoweft.mjs help",
     "validate:demo": "node ./bin/ludoweft.mjs validate --project ./examples/demo/ludoweft.project.json"
   },
   "engines": {
@@ -16,6 +17,7 @@
   },
   "keywords": [
     "agent",
+    "codex-plugin",
     "game-localization",
     "localization",
     "modding",

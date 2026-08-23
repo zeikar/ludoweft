@@ -4,6 +4,8 @@
 
 Ludoweft is an agent-native pipeline for extracting, translating, validating, and rebuilding moddable game resources. It gives coding agents a deterministic CLI and a stable JSONL workspace while leaving game formats to adapters.
 
+The repository is also an installable Codex plugin. The plugin bundles the orchestration skill and CLI, so a game project only needs its manifest, private resources, and translation workspace.
+
 > Status: pre-alpha. The core contract and synthetic round-trip adapter work; real game adapters are the next milestone.
 
 ## Why
@@ -30,6 +32,26 @@ Requirements: Node.js 20 or newer.
 npm test
 npm run demo
 ```
+
+## Install as a Codex plugin
+
+Add the GitHub repository as a Codex marketplace, then install Ludoweft:
+
+```sh
+codex plugin marketplace add zeikar/ludoweft
+codex plugin add ludoweft@ludoweft
+```
+
+Start a new Codex thread after installation so the bundled skill is discovered. Open an authorized localization project and ask Codex to inspect its `ludoweft.project.json`; the skill executes the plugin-bundled CLI without requiring `npm link` or a global Ludoweft install.
+
+To follow updates from `main` during pre-alpha development:
+
+```sh
+codex plugin marketplace upgrade ludoweft
+codex plugin add ludoweft@ludoweft
+```
+
+Release tags and stable version pinning will replace the moving `main` reference once the plugin contract stabilizes.
 
 The demo uses synthetic JSON data under `examples/demo` and exercises extraction, JSONL export, validation, translation application, build, and verification.
 
@@ -85,9 +107,11 @@ Stable IDs and source hashes detect upstream changes. Protected tokens prevent a
 
 Schemas live in `schemas/`. Architecture and adapter boundaries are documented in `docs/`.
 
-## Agent skill
+## Codex plugin and agent skill
 
-`skills/ludoweft-localize` follows the open Agent Skills layout used by Codex. It describes the safe orchestration workflow without coupling the CLI to a specific model provider. Packaging and installation helpers for additional agents are planned after the core workflow stabilizes.
+`.codex-plugin/plugin.json` packages `skills/ludoweft-localize` and the deterministic Node.js CLI as one Codex plugin. The skill describes the safe orchestration workflow, finds its bundled CLI from the installed plugin, and keeps model judgment separate from resource operations.
+
+The core CLI remains agent-agnostic. Packaging for additional coding agents can reuse the same `src/`, schemas, adapters, and workflow contract without changing game project data.
 
 ## Roadmap
 
@@ -95,7 +119,7 @@ Schemas live in `schemas/`. Architecture and adapter boundaries are documented i
 - Add transactional install and restore primitives.
 - Add glossary, style-guide, batching, and review metadata.
 - Add agent workflow evaluations and reproducible fixtures.
-- Publish the skill and CLI through appropriate package channels.
+- Publish stable Codex plugin and CLI releases through appropriate package channels.
 
 ## Legal and safety
 

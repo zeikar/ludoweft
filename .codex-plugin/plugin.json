@@ -1,0 +1,37 @@
+{
+  "name": "ludoweft",
+  "version": "0.0.1",
+  "description": "Agent-native game localization workflows and deterministic resource tooling.",
+  "author": {
+    "name": "zeikar",
+    "url": "https://github.com/zeikar"
+  },
+  "homepage": "https://github.com/zeikar/ludoweft",
+  "repository": "https://github.com/zeikar/ludoweft",
+  "license": "MIT",
+  "keywords": [
+    "agent",
+    "game-localization",
+    "localization",
+    "modding",
+    "translation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ludoweft",
+    "shortDescription": "Agent-native game localization",
+    "longDescription": "Let Codex extract, translate, review, validate, and rebuild authorized moddable game resources through a deterministic CLI workflow.",
+    "developerName": "zeikar",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/zeikar/ludoweft",
+    "defaultPrompt": [
+      "Inspect this Ludoweft localization project",
+      "Prepare this game's text for translation",
+      "Validate and rebuild this Ludoweft project"
+    ]
+  }
+}
