@@ -1,5 +1,6 @@
 node_modules/
 .ludoweft/
+.hyperclaude/
 dist/
 coverage/
 *.local.json
