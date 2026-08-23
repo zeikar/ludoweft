@@ -6,6 +6,13 @@
   "bin": {
     "ludoweft": "./bin/ludoweft.mjs"
   },
+  "files": [
+    "bin",
+    "examples",
+    "schemas",
+    "skills",
+    "src"
+  ],
   "scripts": {
     "test": "node --test",
     "demo": "node ./bin/ludoweft.mjs pipeline --project ./examples/demo/ludoweft.project.json",

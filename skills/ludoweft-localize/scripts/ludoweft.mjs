@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-import { main } from '../../../src/cli.mjs';
+// The plugin ships the whole repository, so the core CLI sits above this skill directory.
+// Verified against an installed plugin root; a narrower packaging would break this path.
+import { runCli } from '../../../src/run-cli.mjs';
 
-main(process.argv.slice(2)).catch((error) => {
-  console.error(`ludoweft: ${error.message}`);
-  if (process.env.LUDOWEFT_DEBUG === '1' && error.stack) console.error(error.stack);
-  process.exitCode = 1;
-});
+runCli(process.argv.slice(2));
