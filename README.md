@@ -103,7 +103,11 @@ One JSON object per line keeps diffs small and lets agents work on separate file
 {"id":"dialogue:intro","source":"Welcome, {player}!","reference":"","target":"{player}님, 어서 오세요!","sourceHash":"...","protectedTokens":["{player}"],"status":"reviewed"}
 ```
 
-Stable IDs and source hashes detect upstream changes. Protected tokens prevent agents from dropping placeholders and markup.
+Stable IDs and source hashes detect upstream changes. When `export` sees a segment whose source changed, it keeps the old translation for reuse but marks the segment `stale`, records `previousSource`, and `apply` refuses to build until it is revised. A segment whose source entry disappears upstream becomes `orphaned` rather than being deleted, so a patch that removes an entry never destroys reviewed work.
+
+Only `translated` and `reviewed` segments reach a build. Protected tokens are recomputed from the extracted source at apply time, so editing `protectedTokens` in the workspace cannot bypass the check, and the comparison runs in both directions — a placeholder the target invents is rejected alongside one it drops.
+
+`apply`, `build`, and `verify` all derive the resource they expect from the current sources and workspace, so an artifact left by an earlier run cannot be built or certified.
 
 Schemas live in `schemas/`. Architecture and adapter boundaries are documented in `docs/`.
 

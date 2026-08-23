@@ -4,7 +4,7 @@ Ludoweft separates deterministic resource operations from probabilistic translat
 
 ## Layers
 
-1. **Core CLI** loads a project, validates schemas, and dispatches lifecycle stages.
+1. **Core CLI** loads a project, validates the manifest and translation workspace, and dispatches lifecycle stages.
 2. **Adapters** understand one resource format or engine family and implement `inspect`, `extract`, `export`, `apply`, `build`, and `verify`.
 3. **Translation workspace** stores stable, reviewable JSONL segments independent of the source archive format.
 4. **Agent skill** tells a coding agent how to plan, translate, review, and invoke quality gates.
@@ -27,7 +27,11 @@ The public Ludoweft repository must not import a private game project. A private
 
 ## Deterministic boundary
 
-Agents may decide how to translate text, but the core owns stable IDs, source hashes, protected-token checks, duplicate detection, file writes, and build verification. This makes model changes observable in translation diffs without making resource operations model-dependent.
+Agents may decide how to translate text, but the core owns stable IDs, source hashes, protected-token checks, duplicate detection, status gating, file writes, and build verification. This makes model changes observable in translation diffs without making resource operations model-dependent.
+
+Every gate derives its answer from data the agent cannot edit for convenience. Protected tokens are recomputed from the extracted source rather than read from the workspace row; `sourceHash` is checked against the row's own source at validation time and against the extracted resource at apply time; `verify` compares the build against the applied resources and the translations that were supposed to land in it. A missing workspace, a missing translation file, or a build that predates `apply` is an error, never an empty success.
+
+`schemas/` documents the on-disk contract. The runtime validators in `src/core/` are what actually run, and `test/schema-parity.test.mjs` fails if the two drift apart.
 
 ## Adapter contract
 

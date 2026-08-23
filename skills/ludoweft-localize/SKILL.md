@@ -34,9 +34,10 @@ For a large workspace, divide work by non-overlapping files or stable ID ranges 
 
 After translation:
 
-1. Run the bundled CLI's `validate` command.
-2. Resolve missing protected tokens, duplicate IDs, malformed JSONL, and stale source hashes.
-3. Run `apply`, `build`, and `verify`.
-4. Report translated and reviewed counts plus build evidence. Keep installation as a separate, explicitly authorized action.
+1. Run the bundled CLI's `validate` command. It reports malformed JSONL, duplicate IDs, corrupted `sourceHash` values, protected tokens that do not match the source, and placeholder counts that differ between source and target.
+2. Resolve every reported error. Do not edit `sourceHash` or `protectedTokens` to silence a check — validation compares them against the segment's own source and will reject the edit.
+3. Re-run `export` after any upstream change. Segments whose source moved on come back as `stale` with the old translation kept in `target` and the old text in `previousSource`; revise them and set the status back to `translated` or `reviewed`. Segments marked `orphaned` no longer exist upstream and need no work.
+4. Run `apply`, `build`, and `verify`. All three refuse to run while any segment is `stale`, while a workspace row is missing for an extracted segment, or while a `sourceHash` no longer matches the extracted source — rerun `export` when that happens. Only `translated` and `reviewed` segments reach a build; every other segment is counted in `skipped`. Check that `applied` and `skipped` match what you expect before trusting the build.
+5. Report translated and reviewed counts plus build evidence. Keep installation as a separate, explicitly authorized action.
 
 Prefer human review for ambiguous dialogue, names, wordplay, UI length constraints, and culturally sensitive material. Do not label unreviewed agent output as a finished human localization.

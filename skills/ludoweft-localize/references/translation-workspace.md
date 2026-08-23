@@ -9,11 +9,18 @@ Each JSONL line is one independent segment. Preserve line boundaries so Git diff
 - `translatedBy` and `reviewedBy`: optional provenance labels
 - Adapter-defined translation notes, when documented by the project
 
-Do not edit `id`, `source`, `reference`, `sourceHash`, `protectedTokens`, or structural `context` merely to make validation pass. A changed source requires a fresh export or an adapter fix.
+These fields survive a re-export. Generated fields — `source`, `reference`, `sourceHash`, `protectedTokens`, `context` — are rebuilt from the extracted resource every time.
+
+Two statuses are set by the pipeline, not by you:
+
+- `stale`: the source text changed after this segment was translated. The old `target` is kept for reuse and the previous text is in `previousSource`. Revise the translation, then set the status back to `translated` or `reviewed`. `apply`, `build`, and `verify` all refuse to run while any segment is `stale`.
+- `orphaned`: the source entry no longer exists upstream. The translation is preserved in case the entry returns, and the status it held beforehand is kept in `previousStatus` so it is restored if that happens. Leave it alone.
+
+Do not edit `id`, `source`, `reference`, `sourceHash`, `protectedTokens`, or structural `context` merely to make validation pass. Validation recomputes `sourceHash` and `protectedTokens` from the segment's own source and rejects values that do not match, so such an edit fails rather than passing. A changed source requires a fresh export or an adapter fix.
 
 ## Translation constraints
 
-- Preserve every `protectedTokens` value exactly, including case and punctuation.
+- Preserve every `protectedTokens` value exactly, including case and punctuation, and keep the same number of occurrences as the source. A placeholder that appears twice in the source must appear twice in the target, and one the source does not contain must not appear in the target at all.
 - Preserve intentional line breaks, markup, interpolation variables, and control codes.
 - Use `reference` only as supporting context; translate the configured source language.
 - Follow the project glossary and character voice guide when present.
