@@ -33,6 +33,8 @@ npm test
 npm run demo
 ```
 
+The demo uses synthetic JSON data under `examples/demo` and exercises extraction, JSONL export, validation, translation application, build, and verification.
+
 ## Install as a Codex plugin
 
 Add the GitHub repository as a Codex marketplace, then install Ludoweft:
@@ -64,7 +66,7 @@ claude plugin install ludoweft@ludoweft
 
 Restart Claude Code so the bundled skill is discovered. Open an authorized localization project and ask Claude to inspect its `ludoweft.project.json`; the skill runs the plugin-bundled CLI from `$CLAUDE_PLUGIN_ROOT`, so no global install or `npm link` is needed.
 
-The demo uses synthetic JSON data under `examples/demo` and exercises extraction, JSONL export, validation, translation application, build, and verification.
+## CLI usage
 
 Run individual stages:
 
