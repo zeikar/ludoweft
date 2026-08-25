@@ -25,7 +25,7 @@
   "interface": {
     "displayName": "Ludoweft",
     "shortDescription": "Agent-native game localization",
-    "longDescription": "Let Codex extract, translate, review, validate, and rebuild authorized moddable game resources through a deterministic CLI workflow.",
+    "longDescription": "Let Codex extract, translate, review, validate, and rebuild moddable game resources through a deterministic CLI workflow.",
     "developerName": "zeikar",
     "category": "Developer Tools",
     "capabilities": [

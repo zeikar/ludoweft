@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "ludoweft",
-      "description": "Extract, translate, review, validate, and rebuild authorized moddable game resources through a deterministic CLI.",
+      "description": "Extract, translate, review, validate, and rebuild moddable game resources through a deterministic CLI.",
       "source": "./"
     }
   ]

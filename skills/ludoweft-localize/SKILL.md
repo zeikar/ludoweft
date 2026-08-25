@@ -1,6 +1,6 @@
 ---
 name: ludoweft-localize
-description: This skill should be used when a project contains ludoweft.project.json, or when the user asks to extract, translate, patch, or rebuild text in authorized moddable game files, including FreeMote info-PSB and MAGES visual-novel archives. It covers resource inspection, extraction, JSONL translation, review, validation, and rebuilding through the Ludoweft CLI. It should not be used for runtime OCR, text-hook translation, application i18n frameworks, or plain document translation.
+description: This skill should be used when a project contains ludoweft.project.json, or when the user asks to extract, translate, patch, or rebuild text in moddable game files, including FreeMote info-PSB and MAGES visual-novel archives. It covers resource inspection, extraction, JSONL translation, review, validation, and rebuilding through the Ludoweft CLI. It should not be used for runtime OCR, text-hook translation, application i18n frameworks, or plain document translation.
 ---
 
 # Ludoweft localization
@@ -40,7 +40,7 @@ If the project has no supported adapter, run `adapters`, inspect the format, and
 
 Read the entry that matches the project; skip the rest.
 
-- **FreeMote info-PSB.** `freemote-info-psb` requires separately installed FreeMote tools and project-authored archive configuration. An authorized private project must supply `adapterConfig`, `paths.freeMote`, and any local overlay after `init`. Never guess those values or download the tools implicitly.
+- **FreeMote info-PSB.** `freemote-info-psb` requires separately installed FreeMote tools and project-authored archive configuration. A private project must supply `adapterConfig`, `paths.freeMote`, and any local overlay after `init`. Never guess those values or download the tools implicitly.
 - **Legacy JSONL trees.** For a legacy `ja`/`en`/`ko` tree, run `import-jsonl --dry-run` into a separate destination first, then reconcile it with a fresh adapter export. Manifest `paths` resolve against the manifest's directory, but `--input` and `--output` resolve against the current working directory. Non-empty imported targets are `draft` until reviewed, validated, and explicitly promoted to `translated` or `reviewed`.
 
 ## Translation workflow

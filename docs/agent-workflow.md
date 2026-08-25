@@ -5,7 +5,7 @@ The agent layer orchestrates translation; it does not replace the deterministic 
 ## Recommended roles
 
 - **Coordinator:** inspects the project, creates non-overlapping batches, merges results, and runs validation.
-- **Context analyst:** derives a glossary, character voices, naming rules, and scene summaries from authorized workspace content, following `skills/ludoweft-localize/references/glossary-and-style.md`.
+- **Context analyst:** derives a glossary, character voices, naming rules, and scene summaries from workspace content, following `skills/ludoweft-localize/references/glossary-and-style.md`.
 - **Translator:** edits only assigned `target` and workflow metadata fields.
 - **Reviewer:** checks meaning, voice, terminology, placeholders, and neighboring-scene consistency.
 - **Build verifier:** runs validation and rebuild stages and reports evidence without silently installing files.

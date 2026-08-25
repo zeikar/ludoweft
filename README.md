@@ -48,7 +48,7 @@ codex plugin marketplace add zeikar/ludoweft
 codex plugin add ludoweft@ludoweft
 ```
 
-Start a new Codex thread after installation so the bundled skill is discovered. Open an authorized localization project and ask Codex to inspect its `ludoweft.project.json`; the skill executes the plugin-bundled CLI without requiring `npm link` or a global Ludoweft install.
+Start a new Codex thread after installation so the bundled skill is discovered. Open a localization project and ask Codex to inspect its `ludoweft.project.json`; the skill executes the plugin-bundled CLI without requiring `npm link` or a global Ludoweft install.
 
 To follow updates from `main` during pre-alpha development:
 
@@ -68,7 +68,7 @@ claude plugin marketplace add zeikar/ludoweft
 claude plugin install ludoweft@ludoweft
 ```
 
-Restart Claude Code so the bundled skill is discovered. Open an authorized localization project and ask Claude to inspect its `ludoweft.project.json`; the skill runs the plugin-bundled CLI from `$CLAUDE_PLUGIN_ROOT`, so no global install or `npm link` is needed.
+Restart Claude Code so the bundled skill is discovered. Open a localization project and ask Claude to inspect its `ludoweft.project.json`; the skill runs the plugin-bundled CLI from `$CLAUDE_PLUGIN_ROOT`, so no global install or `npm link` is needed.
 
 ## CLI usage
 
