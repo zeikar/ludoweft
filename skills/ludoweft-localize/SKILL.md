@@ -29,10 +29,9 @@ Use the bundled path for every Ludoweft command in this workflow. Add `--json` w
 ## Start safely
 
 1. Locate `ludoweft.project.json` and run the bundled CLI's `inspect` command. `adapters` lists the installed resource adapters and needs no manifest. If the repository is empty, use `init` only after the adapter and source/target languages are known; do not guess them. `init` creates an adapter-neutral skeleton, so add the selected adapter's project-authored configuration before expecting `inspect` to succeed.
-2. Confirm that the user is authorized to modify the game files in scope. Ask directly and wait for the answer; do not extract before it arrives.
-3. Check whether the project already carries a glossary, character voice guide, and style rules, and extend them rather than authoring new ones. [references/glossary-and-style.md](references/glossary-and-style.md) gives their canonical paths.
-4. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories.
-5. Ludoweft has no install command. `build` writes to the project's output directory and never touches the live game. Copy files into a game directory only when the user asks, and back up every replaced file first.
+2. Check whether the project already carries a glossary, character voice guide, and style rules, and extend them rather than authoring new ones. [references/glossary-and-style.md](references/glossary-and-style.md) gives their canonical paths.
+3. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories.
+4. Ludoweft has no install command. `build` writes to the project's output directory and never touches the live game. Copy files into a game directory only when the user asks, and back up every replaced file first.
 
 If the project has no supported adapter, run `adapters`, inspect the format, and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
 

@@ -172,10 +172,6 @@ Both hosts install the whole repository and discover skills at `skills/<name>/SK
 - Add agent workflow evaluations and reproducible fixtures.
 - Publish stable plugin and CLI releases through appropriate package channels.
 
-## Legal and safety
-
-Use Ludoweft only with games and files you are authorized to modify. Keep original assets and extracted source text out of public repositories. Review third-party tool licenses before downloading or redistributing them. Installation into a live game directory must always be explicit and backed up first.
-
 ## License
 
 MIT
