@@ -162,7 +162,7 @@ Both hosts install the whole repository and discover skills at `skills/<name>/SK
 
 - Add more independently tested content handlers and external adapter loading.
 - Add transactional install and restore primitives.
-- Add glossary, style-guide, batching, and review metadata.
+- Model glossary, style-guide, batching, and review metadata in the workspace schema; the authoring guidance already ships with the skill.
 - Add agent workflow evaluations and reproducible fixtures.
 - Publish stable plugin and CLI releases through appropriate package channels.
 

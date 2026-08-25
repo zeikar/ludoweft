@@ -7,11 +7,11 @@ Each JSONL line is one independent segment. Preserve line boundaries so Git diff
 - `target`: translated text
 - `status`: `untranslated`, `draft`, `translated`, `reviewed`, or `blocked`
 - `translatedBy` and `reviewedBy`: optional provenance labels
-- Adapter-defined translation notes, when documented by the project
+- `note`: a free-form translation note, and the default place to explain a `blocked` segment
 
-These fields survive a re-export. Generated fields — `source`, `reference`, `sourceHash`, `protectedTokenSource`, `protectedTokenProfile`, `protectedTokens`, `context` — are rebuilt from the extracted resource every time.
+These fields survive a re-export, and so do fields the adapter does not recognize — that is what makes `note` and any project-defined workflow field safe to add. Generated fields — `source`, `reference`, `sourceHash`, `protectedTokenSource`, `protectedTokenProfile`, `protectedTokens`, `context` — are rebuilt from the extracted resource every time.
 
-Two statuses are set by the pipeline, not by you:
+Two statuses are set by the pipeline, not by the translator:
 
 - `stale`: the source text changed after this segment was translated. The old `target` is kept for reuse and the previous text is in `previousSource`. Revise the translation, then set the status back to `translated` or `reviewed`. `apply`, `build`, and `verify` all refuse to run while any segment is `stale`.
 - `orphaned`: the source entry no longer exists upstream. The translation is preserved in case the entry returns, and the status it held beforehand is kept in `previousStatus` so it is restored if that happens. Leave it alone.
@@ -23,8 +23,8 @@ Do not edit `id`, `source`, `reference`, `sourceHash`, `protectedTokenSource`, `
 - Preserve every `protectedTokens` value exactly, including case and punctuation, and keep the same number of occurrences as the text named by `protectedTokenSource`. A placeholder that appears twice there must appear twice in the target, and one it does not contain must not appear in the target at all.
 - Preserve intentional line breaks, markup, interpolation variables, and control codes.
 - Use `reference` only as supporting context; translate the configured source language.
-- Follow the project glossary and character voice guide when present.
-- Mark uncertain entries `blocked` and explain the issue in an adapter-supported note field instead of guessing silently.
+- Follow the project glossary, character voice guide, and style rules. [glossary-and-style.md](glossary-and-style.md) gives their canonical paths; ask the coordinator when a batch arrives without them.
+- Mark uncertain entries `blocked` and explain the issue in `note` instead of guessing silently.
 
 ## Parallel batches
 
