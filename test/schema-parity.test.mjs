@@ -87,6 +87,7 @@ const SEGMENT_CASES = [
   ['status.enum', validSegment({ status: 'shipped' })],
   ['translatedBy.type', validSegment({ translatedBy: 42 })],
   ['reviewedBy.type', validSegment({ reviewedBy: 42 })],
+  ['note.type', validSegment({ note: 42 })],
 ];
 
 const PROJECT_CASES = [
@@ -290,6 +291,7 @@ const TYPED_FIELDS = [
   [segmentSchema, 'segment', validateSegment, 'context', (v) => validSegment({ context: v })],
   [segmentSchema, 'segment', validateSegment, 'translatedBy', (v) => validSegment({ translatedBy: v })],
   [segmentSchema, 'segment', validateSegment, 'reviewedBy', (v) => validSegment({ reviewedBy: v })],
+  [segmentSchema, 'segment', validateSegment, 'note', (v) => validSegment({ note: v })],
   [projectSchema, 'project', validateProject, '', (v) => v],
   [projectSchema, 'project', validateProject, 'id', (v) => validProject({ id: v })],
   [projectSchema, 'project', validateProject, 'adapter', (v) => validProject({ adapter: v })],

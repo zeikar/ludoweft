@@ -26,7 +26,8 @@
       "enum": ["untranslated", "draft", "translated", "reviewed", "blocked", "stale", "orphaned"]
     },
     "translatedBy": { "type": "string" },
-    "reviewedBy": { "type": "string" }
+    "reviewedBy": { "type": "string" },
+    "note": { "type": "string" }
   },
   "additionalProperties": true
 }

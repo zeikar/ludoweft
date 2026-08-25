@@ -95,7 +95,7 @@ export function validateSegment(row, location = 'segment') {
     if (typeof row[field] !== 'string') errors.push(`${location}: ${field} must be a string`);
   }
   if (row.id === '') errors.push(`${location}: id must not be empty`);
-  for (const field of ['reference', 'translatedBy', 'reviewedBy', 'previousSource']) {
+  for (const field of ['reference', 'translatedBy', 'reviewedBy', 'note', 'previousSource']) {
     if (row[field] !== undefined && typeof row[field] !== 'string') {
       errors.push(`${location}: ${field} must be a string when present`);
     }
