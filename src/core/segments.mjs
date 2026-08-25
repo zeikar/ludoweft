@@ -41,7 +41,13 @@ function protectedTokenPatterns(profile) {
     // MAGES uses two-character controls that can be immediately followed by text
     // and by another control (for example `%CContinue%p`). Claim them before the
     // generic percent-wrapped placeholder pattern so it cannot join both controls.
-    ...(profile === 'mages' ? [/%%[Cp]/g, /%[Cp]/g] : []),
+    // A MAGES scenario tag carries its display text as its last field
+    // (`<tips,1,The Organization>`) and that text is localized with the rest of the line.
+    // Claim only the structural head, or the generic tag pattern below takes the whole tag
+    // and forces the reference language into every target that keeps the reference.
+    ...(profile === 'mages'
+      ? [/%%[Cp]/g, /%[Cp]/g, /<[A-Za-z][A-Za-z0-9_]*(?:,\d+)+,/g]
+      : []),
     /%[A-Za-z0-9_]+%/g,
     /<\/?[A-Za-z][^>]*>/g,
     /\{[^{}]+\}/g,

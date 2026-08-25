@@ -121,3 +121,19 @@ test('the MAGES token profile keeps escaped double-percent controls distinct', (
   assert.ok(validateSegment({ ...row, target: '%C계속%p' })
     .some((error) => /missing protected token %%C/.test(error)));
 });
+
+test('a MAGES scenario tag protects its structure and leaves its display text translatable', () => {
+  const reference = '"What!? <tips,1,The Organization> is already moving?"';
+  assert.deepEqual(extractProtectedTokens(reference, 'mages'), ['<tips,1,']);
+  // a tag that carries no localized field is still claimed whole
+  assert.deepEqual(extractProtectedTokens('<br> and <i>x</i>', 'mages'), ['</i>', '<br>', '<i>']);
+  // the default profile keeps its previous behaviour
+  assert.deepEqual(extractProtectedTokens(reference, 'default'), ['<tips,1,The Organization>']);
+
+  assert.deepEqual(
+    compareProtectedTokens(reference, '"뭐라고!? <tips,1,기관>이 벌써 움직이고 있다고?"', 'mages'),
+    [],
+  );
+  assert.ok(compareProtectedTokens(reference, '"뭐라고!? 기관이 벌써 움직이고 있다고?"', 'mages')
+    .some((error) => /missing protected token <tips,1,/.test(error)));
+});
