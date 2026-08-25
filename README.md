@@ -1,5 +1,9 @@
 # Ludoweft
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](package.json)
+[![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange.svg)](#)
+
 **Let coding agents localize games.**
 
 Ludoweft is an agent-native pipeline for extracting, translating, validating, and rebuilding moddable game resources. It gives coding agents a deterministic CLI and a stable JSONL workspace while leaving game formats to adapters.
@@ -20,7 +24,7 @@ The CLI does not call a model provider. Codex, Claude, or another compatible age
 
 ## Scope
 
-The initial scope is file-based localization patches for text-heavy PC games whose resources can be extracted and rebuilt. Runtime text hooking, OCR translation, and universal support for every engine are outside the initial scope.
+The initial scope is file-based localization patches for text-heavy PC games — visual novels, adventure games, and other script-driven titles — whose resources can be extracted and rebuilt. It suits a community translation patch that ships translated text only. Runtime text hooking, OCR translation, and universal support for every engine are outside the initial scope.
 
 Ludoweft never includes commercial game assets, extracted text, archive keys, or third-party tools that cannot be redistributed.
 
@@ -143,11 +147,11 @@ Only `translated` and `reviewed` segments reach a build. Protected tokens are re
 
 `apply`, `build`, and `verify` all derive the resource they expect from the current sources and workspace, so an artifact left by an earlier run cannot be built or certified.
 
-Schemas live in `schemas/`. Architecture and adapter boundaries are documented in `docs/`.
+Schemas live in [`schemas/`](schemas/). Architecture and adapter boundaries are documented in [`docs/architecture.md`](docs/architecture.md), and the agent-side roles and data boundary in [`docs/agent-workflow.md`](docs/agent-workflow.md).
 
 ## FreeMote info-PSB adapter
 
-`freemote-info-psb` supports paired `*_info.psb.m` and `*_body.bin` archives through separately installed FreeMote tools. It provides `mages-scenario` and `localized-string-array` content handlers plus constrained `appendUnique` and `merge` JSON mutations. Archive names, keys, language slots, file allowlists, and game-specific mutations remain in the private project; the public adapter contains no game assets or keys and never downloads FreeMote implicitly.
+`freemote-info-psb` supports paired `*_info.psb.m` and `*_body.bin` archives through separately installed FreeMote tools. It provides `mages-scenario` (MAGES engine scenario scripts) and `localized-string-array` content handlers plus constrained `appendUnique` and `merge` JSON mutations. Archive names, keys, language slots, file allowlists, and game-specific mutations remain in the private project; the public adapter contains no game assets or keys and never downloads FreeMote implicitly.
 
 ## Plugins and the agent skill
 
