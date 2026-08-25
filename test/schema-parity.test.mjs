@@ -6,6 +6,8 @@ import { hashSource } from '../src/core/hash.mjs';
 import { PROJECT_ID_PATTERN, validateProject } from '../src/core/project.mjs';
 import {
   PREVIOUS_STATUSES,
+  PROTECTED_TOKEN_PROFILES,
+  PROTECTED_TOKEN_SOURCES,
   SEGMENT_STATUSES,
   SOURCE_HASH_PATTERN,
   validateSegment,
@@ -79,6 +81,8 @@ const SEGMENT_CASES = [
   ['protectedTokens.uniqueItems', validSegment({ source: '{a}', protectedTokens: ['{a}', '{a}'] })],
   ['protectedTokens.items.type', validSegment({ source: '{a}', protectedTokens: [42] })],
   ['protectedTokens.items.minLength', validSegment({ source: '{a}', protectedTokens: [''] })],
+  ['protectedTokenSource.enum', validSegment({ protectedTokenSource: 'destination' })],
+  ['protectedTokenProfile.enum', validSegment({ protectedTokenProfile: 'unknown' })],
   ['context.type', validSegment({ context: 'x' })],
   ['status.enum', validSegment({ status: 'shipped' })],
   ['translatedBy.type', validSegment({ translatedBy: 42 })],
@@ -133,6 +137,14 @@ test('the baseline fixtures satisfy both validators', () => {
 test('enums and patterns declared in the segment schema match the validator', () => {
   assert.deepEqual([...segmentSchema.properties.status.enum].sort(), [...SEGMENT_STATUSES].sort());
   assert.deepEqual([...segmentSchema.properties.previousStatus.enum].sort(), [...PREVIOUS_STATUSES].sort());
+  assert.deepEqual(
+    [...segmentSchema.properties.protectedTokenSource.enum].sort(),
+    [...PROTECTED_TOKEN_SOURCES].sort(),
+  );
+  assert.deepEqual(
+    [...segmentSchema.properties.protectedTokenProfile.enum].sort(),
+    [...PROTECTED_TOKEN_PROFILES].sort(),
+  );
   assert.equal(segmentSchema.properties.sourceHash.pattern, SOURCE_HASH_PATTERN.source);
 });
 

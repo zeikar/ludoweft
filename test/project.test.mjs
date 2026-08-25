@@ -74,6 +74,110 @@ test('redaction does not depend on secret-sounding key names', () => {
   }
 });
 
+test('project inspection withholds machine-local absolute paths', () => {
+  const redacted = redactProject({
+    id: 'demo',
+    paths: { source: path.resolve('private-game'), translations: './translations' },
+    localConfig: path.resolve('private-config.json'),
+  });
+  assert.equal(redacted.paths.source, '[local absolute path]');
+  assert.equal(redacted.paths.translations, './translations');
+  assert.equal(redacted.localConfig, '[local absolute path]');
+});
+
+test('managed project paths stay strictly inside the root and never overlap', () => withDemo(({ project }) => {
+  const manifestFile = path.join(project.root, 'ludoweft.project.json');
+  const manifest = readJson(manifestFile);
+
+  manifest.paths.work = '.';
+  writeJson(manifestFile, manifest);
+  assert.throws(() => readProject(manifestFile), /paths\.work must not be the project root/);
+
+  manifest.paths.work = '../outside/work';
+  writeJson(manifestFile, manifest);
+  assert.throws(() => readProject(manifestFile), /paths\.work must stay inside the project root/);
+
+  manifest.paths.work = './managed';
+  manifest.paths.translations = './managed/translations';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.work and paths\.translations must be separate, non-nested directories/,
+  );
+
+  manifest.paths.work = manifest.paths.source;
+  manifest.paths.translations = './translations';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.work and paths\.source must be separate, non-nested directories/,
+  );
+
+  manifest.paths.source = './work/extracted/game-data';
+  manifest.paths.work = './work';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.work and paths\.source must be separate, non-nested directories/,
+  );
+
+  manifest.paths.source = './game-data';
+  manifest.paths.work = './work';
+  manifest.paths.freeMote = './work/tools';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.work and paths\.freeMote must be separate, non-nested directories/,
+  );
+
+  const existingFile = path.join(project.root, 'not-a-directory');
+  fs.writeFileSync(existingFile, 'keep me', 'utf8');
+  delete manifest.paths.freeMote;
+  manifest.paths.output = './not-a-directory';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.output must be a regular directory when it already exists/,
+  );
+
+  manifest.paths.output = './.git/generated-output';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.output must not be inside version-control metadata/,
+  );
+}));
+
+test('managed path checks resolve symlinks in existing ancestors', (t) => withDemo(({ project }) => {
+  const manifestFile = path.join(project.root, 'ludoweft.project.json');
+  const manifest = readJson(manifestFile);
+  const outside = path.join(path.dirname(project.root), 'outside');
+  const escape = path.join(project.root, 'escape');
+  fs.mkdirSync(outside);
+  try {
+    fs.symlinkSync(outside, escape, process.platform === 'win32' ? 'junction' : 'dir');
+  } catch (error) {
+    if (['EPERM', 'EACCES', 'ENOSYS'].includes(error.code)) {
+      t.skip(`directory symlinks are unavailable: ${error.code}`);
+      return;
+    }
+    throw error;
+  }
+
+  manifest.paths.work = './escape/not-created-yet';
+  writeJson(manifestFile, manifest);
+  assert.throws(() => readProject(manifestFile), /paths\.work must stay inside the project root/);
+
+  const sourceAlias = path.join(project.root, 'source-alias');
+  fs.symlinkSync(path.join(project.root, 'game-data'), sourceAlias, process.platform === 'win32' ? 'junction' : 'dir');
+  manifest.paths.work = './source-alias';
+  writeJson(manifestFile, manifest);
+  assert.throws(
+    () => readProject(manifestFile),
+    /paths\.work and paths\.source must be separate, non-nested directories/,
+  );
+}));
+
 test('project manifest keeps its declared path layout', () => withDemo(({ project }) => {
   const manifest = readProject(path.join(project.root, 'ludoweft.project.json'));
   assert.equal(manifest.config.id, 'ludoweft-demo-ko');

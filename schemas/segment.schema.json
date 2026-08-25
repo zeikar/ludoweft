@@ -19,6 +19,8 @@
       "items": { "type": "string", "minLength": 1 },
       "uniqueItems": true
     },
+    "protectedTokenSource": { "enum": ["source", "reference"] },
+    "protectedTokenProfile": { "enum": ["default", "mages"] },
     "context": { "type": "object" },
     "status": {
       "enum": ["untranslated", "draft", "translated", "reviewed", "blocked", "stale", "orphaned"]

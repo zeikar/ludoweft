@@ -1,6 +1,10 @@
 import demoJson from '../adapters/demo-json.mjs';
+import freeMoteInfoPsb from '../adapters/freemote-info-psb.mjs';
 
-const adapters = new Map([[demoJson.id, demoJson]]);
+const adapters = new Map([
+  [demoJson.id, demoJson],
+  [freeMoteInfoPsb.id, freeMoteInfoPsb],
+]);
 
 export function listAdapters() {
   return [...adapters.values()].map(({ id, description, stability }) => ({ id, description, stability }));

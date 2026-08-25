@@ -1,6 +1,6 @@
 {
   "name": "ludoweft",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An agent-native pipeline for extracting, translating, validating, and rebuilding game resources.",
   "type": "module",
   "bin": {

@@ -20,15 +20,38 @@ export const PREVIOUS_STATUSES = SEGMENT_STATUSES.filter((status) => status !== 
 
 export const SOURCE_HASH_PATTERN = /^[a-f0-9]{64}$/;
 
+export const PROTECTED_TOKEN_SOURCES = ['source', 'reference'];
+
+export const PROTECTED_TOKEN_PROFILES = ['default', 'mages'];
+
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 // Counts non-overlapping tokens so `{{name}}` is claimed whole instead of also yielding `{name}`.
-function countProtectedTokens(text) {
+function protectedTokenPatterns(profile) {
+  if (!PROTECTED_TOKEN_PROFILES.includes(profile)) {
+    throw new Error(`unknown protected token profile: ${profile}`);
+  }
+  return [
+    /\r\n|\r|\n/g,
+    /\\+[nrt]/g,
+    /\$\{[^{}]+\}/g,
+    /\{\{[^{}]+\}\}/g,
+    // MAGES uses two-character controls that can be immediately followed by text
+    // and by another control (for example `%CContinue%p`). Claim them before the
+    // generic percent-wrapped placeholder pattern so it cannot join both controls.
+    ...(profile === 'mages' ? [/%%[Cp]/g, /%[Cp]/g] : []),
+    /%[A-Za-z0-9_]+%/g,
+    /<\/?[A-Za-z][^>]*>/g,
+    /\{[^{}]+\}/g,
+  ];
+}
+
+function countProtectedTokens(text, profile = 'default') {
   const counts = new Map();
   if (typeof text !== 'string') return counts;
-  const patterns = [/\{\{[^{}]+\}\}/g, /%[A-Za-z0-9_]+%/g, /<\/?[A-Za-z][^>]*>/g, /\{[^{}]+\}/g];
+  const patterns = protectedTokenPatterns(profile);
   const claimed = [];
   for (const pattern of patterns) {
     for (let match = pattern.exec(text); match; match = pattern.exec(text)) {
@@ -42,16 +65,16 @@ function countProtectedTokens(text) {
   return counts;
 }
 
-export function extractProtectedTokens(text) {
-  return [...countProtectedTokens(text).keys()].sort();
+export function extractProtectedTokens(text, profile = 'default') {
+  return [...countProtectedTokens(text, profile).keys()].sort();
 }
 
 // Compares occurrence counts in both directions, not mere presence: a placeholder dropped
 // from one of two occurrences still breaks the rendered string, and one the target invents
 // renders as literal text the game never substitutes.
-export function compareProtectedTokens(source, target) {
-  const sourceCounts = countProtectedTokens(source);
-  const targetCounts = countProtectedTokens(target);
+export function compareProtectedTokens(source, target, profile = 'default') {
+  const sourceCounts = countProtectedTokens(source, profile);
+  const targetCounts = countProtectedTokens(target, profile);
   const errors = [];
   for (const token of [...new Set([...sourceCounts.keys(), ...targetCounts.keys()])].sort()) {
     const expected = sourceCounts.get(token) ?? 0;
@@ -83,6 +106,16 @@ export function validateSegment(row, location = 'segment') {
   if (row.status !== undefined && !SEGMENT_STATUSES.includes(row.status)) {
     errors.push(`${location}: status must be one of ${SEGMENT_STATUSES.join(', ')}`);
   }
+  const protectedTokenSource = row.protectedTokenSource ?? 'source';
+  const protectedTokenProfile = row.protectedTokenProfile ?? 'default';
+  if (!PROTECTED_TOKEN_SOURCES.includes(protectedTokenSource)) {
+    errors.push(`${location}: protectedTokenSource must be one of ${PROTECTED_TOKEN_SOURCES.join(', ')}`);
+  } else if (typeof row[protectedTokenSource] !== 'string') {
+    errors.push(`${location}: protectedTokenSource ${protectedTokenSource} requires a string ${protectedTokenSource}`);
+  }
+  if (!PROTECTED_TOKEN_PROFILES.includes(protectedTokenProfile)) {
+    errors.push(`${location}: protectedTokenProfile must be one of ${PROTECTED_TOKEN_PROFILES.join(', ')}`);
+  }
   // Set by export when a segment is orphaned, so it can regain its status if the entry returns.
   if (row.previousStatus !== undefined && !PREVIOUS_STATUSES.includes(row.previousStatus)) {
     errors.push(`${location}: previousStatus must be one of ${PREVIOUS_STATUSES.join(', ')}`);
@@ -95,12 +128,13 @@ export function validateSegment(row, location = 'segment') {
       errors.push(`${location}: protectedTokens entries must be non-empty strings`);
     } else if (new Set(row.protectedTokens).size !== row.protectedTokens.length) {
       errors.push(`${location}: protectedTokens entries must be unique`);
-    } else if (typeof row.source === 'string') {
-      // The field is agent-editable, so it must still describe this row's own source.
-      const derived = extractProtectedTokens(row.source);
+    } else if (typeof row[protectedTokenSource] === 'string'
+      && PROTECTED_TOKEN_PROFILES.includes(protectedTokenProfile)) {
+      // The field is agent-editable, so it must still describe the configured source text.
+      const derived = extractProtectedTokens(row[protectedTokenSource], protectedTokenProfile);
       const listed = [...row.protectedTokens].sort();
       if (derived.length !== listed.length || derived.some((token, index) => token !== listed[index])) {
-        errors.push(`${location}: protectedTokens does not match the tokens in source`);
+        errors.push(`${location}: protectedTokens does not match the tokens in ${protectedTokenSource}`);
       }
     }
   }
@@ -114,8 +148,10 @@ export function validateSegment(row, location = 'segment') {
     }
   }
 
-  if (typeof row.source === 'string' && typeof row.target === 'string' && row.target.length > 0) {
-    errors.push(...compareProtectedTokens(row.source, row.target).map((error) => `${location}: ${error}`));
+  if (typeof row[protectedTokenSource] === 'string' && typeof row.target === 'string' && row.target.length > 0
+    && PROTECTED_TOKEN_PROFILES.includes(protectedTokenProfile)) {
+    errors.push(...compareProtectedTokens(row[protectedTokenSource], row.target, protectedTokenProfile)
+      .map((error) => `${location}: ${error}`));
   }
   return errors;
 }

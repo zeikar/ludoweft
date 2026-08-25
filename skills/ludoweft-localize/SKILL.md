@@ -24,12 +24,14 @@ Use the bundled path for every Ludoweft command in this workflow. If Node.js 20 
 
 ## Start safely
 
-1. Locate `ludoweft.project.json` and run the bundled CLI's `inspect` command.
+1. Locate `ludoweft.project.json` and run the bundled CLI's `inspect` command. If the repository is empty, use `init` only after the adapter and source/target languages are known; do not guess them. `init` creates an adapter-neutral skeleton, so add the selected adapter's project-authored configuration before expecting `inspect` to succeed.
 2. Confirm that the user is authorized to modify the game files in scope.
 3. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories.
 4. Do not install or overwrite live game files unless the user asks. A future install operation must create and verify a backup first.
 
 If the project has no supported adapter, inspect the format and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
+
+`freemote-info-psb` requires separately installed FreeMote tools and project-authored archive configuration. An authorized private project must supply `adapterConfig`, `paths.freeMote`, and any local overlay after `init`. Never guess those values or download the tools implicitly. For a legacy `ja`/`en`/`ko` JSONL tree, use `import-jsonl --dry-run` into a separate destination first, then reconcile it with a fresh adapter export. Non-empty imported targets are `draft` until reviewed, validated, and explicitly promoted to `translated` or `reviewed`.
 
 ## Translation workflow
 
@@ -39,7 +41,7 @@ For a large workspace, divide work by non-overlapping files or stable ID ranges 
 
 After translation:
 
-1. Run the bundled CLI's `validate` command. It reports malformed JSONL, duplicate IDs, corrupted `sourceHash` values, protected tokens that do not match the source, and placeholder counts that differ between source and target.
+1. Run the bundled CLI's `validate` command. It reports malformed JSONL, duplicate IDs, corrupted `sourceHash` values, protected tokens that do not match their configured source or reference slot, and placeholder counts that differ from the target.
 2. Resolve every reported error. Do not edit `sourceHash` or `protectedTokens` to silence a check — validation compares them against the segment's own source and will reject the edit.
 3. Re-run `export` after any upstream change. Segments whose source moved on come back as `stale` with the old translation kept in `target` and the old text in `previousSource`; revise them and set the status back to `translated` or `reviewed`. Segments marked `orphaned` no longer exist upstream and need no work.
 4. Run `apply`, `build`, and `verify`. All three refuse to run while any segment is `stale`, while a workspace row is missing for an extracted segment, or while a `sourceHash` no longer matches the extracted source — rerun `export` when that happens. Only `translated` and `reviewed` segments reach a build; every other segment is counted in `skipped`. Check that `applied` and `skipped` match what you expect before trusting the build.

@@ -6,7 +6,7 @@ Ludoweft is an agent-native pipeline for extracting, translating, validating, an
 
 The repository is also an installable plugin for both Codex and Claude Code. Either plugin bundles the same orchestration skill and CLI, so a game project only needs its manifest, private resources, and translation workspace.
 
-> Status: pre-alpha. The core contract and synthetic round-trip adapter work; real game adapters are the next milestone.
+> Status: pre-alpha. The core contract, synthetic adapter, and first FreeMote info-PSB adapter work; adapter APIs may still change.
 
 ## Why
 
@@ -78,6 +78,27 @@ node ./bin/ludoweft.mjs build --project ./examples/demo/ludoweft.project.json
 node ./bin/ludoweft.mjs verify --project ./examples/demo/ludoweft.project.json
 ```
 
+Create an adapter-neutral project skeleton after choosing the adapter and language direction:
+
+```sh
+node ./bin/ludoweft.mjs init --adapter demo-json --source-language en --reference-language ja --target-language ko
+```
+
+`init` deliberately writes only the adapter-neutral core manifest. Before `inspect` can
+succeed, add the selected adapter's project-authored profile. For `demo-json`, use
+[`examples/demo/ludoweft.project.json`](examples/demo/ludoweft.project.json) as the
+configuration reference. For `freemote-info-psb`, supply private `adapterConfig` and
+`paths.freeMote` values; do not guess archive details, keys, or local tool paths.
+
+Convert a separate legacy `ja`/`en`/`ko` JSONL tree before reconciling it with a fresh export:
+
+```sh
+node ./bin/ludoweft.mjs import-jsonl --format ja-en-ko-v1 --input ./legacy --output ./translations --dry-run
+```
+
+Non-empty imported targets are deliberately marked `draft`. Review and validate them,
+then promote only accepted rows to `translated` or `reviewed` before building.
+
 After `npm link`, the same commands are available through `ludoweft`.
 
 ## Project manifest
@@ -116,11 +137,15 @@ One JSON object per line keeps diffs small and lets agents work on separate file
 
 Stable IDs and source hashes detect upstream changes. When `export` sees a segment whose source changed, it keeps the old translation for reuse but marks the segment `stale`, records `previousSource`, and `apply` refuses to build until it is revised. A segment whose source entry disappears upstream becomes `orphaned` rather than being deleted, so a patch that removes an entry never destroys reviewed work.
 
-Only `translated` and `reviewed` segments reach a build. Protected tokens are recomputed from the extracted source at apply time, so editing `protectedTokens` in the workspace cannot bypass the check, and the comparison runs in both directions — a placeholder the target invents is rejected alongside one it drops.
+Only `translated` and `reviewed` segments reach a build. Protected tokens are recomputed from the adapter-selected `source` or `reference` slot under a named token profile at apply time, so editing `protectedTokens`, `protectedTokenSource`, or `protectedTokenProfile` in the workspace cannot bypass the check. The comparison runs in both directions — a placeholder the target invents is rejected alongside one it drops. The built-in `mages` profile also protects the engine's `%C`, `%p`, and escaped `%%C` controls when a resource opts into it.
 
 `apply`, `build`, and `verify` all derive the resource they expect from the current sources and workspace, so an artifact left by an earlier run cannot be built or certified.
 
 Schemas live in `schemas/`. Architecture and adapter boundaries are documented in `docs/`.
+
+## FreeMote info-PSB adapter
+
+`freemote-info-psb` supports paired `*_info.psb.m` and `*_body.bin` archives through separately installed FreeMote tools. It provides `mages-scenario` and `localized-string-array` content handlers plus constrained `appendUnique` and `merge` JSON mutations. Archive names, keys, language slots, file allowlists, and game-specific mutations remain in the private project; the public adapter contains no game assets or keys and never downloads FreeMote implicitly.
 
 ## Plugins and the agent skill
 
@@ -135,7 +160,7 @@ Both hosts install the whole repository and discover skills at `skills/<name>/SK
 
 ## Roadmap
 
-- Extract the first real adapter from the STEINS;GATE RE:BOOT prototype without publishing game-specific data.
+- Add more independently tested content handlers and external adapter loading.
 - Add transactional install and restore primitives.
 - Add glossary, style-guide, batching, and review metadata.
 - Add agent workflow evaluations and reproducible fixtures.

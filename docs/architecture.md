@@ -52,3 +52,5 @@ export default {
 ```
 
 Adapters may invoke existing third-party tools. They should download nothing implicitly, must verify configured tool versions when possible, and must not embed game keys or proprietary assets.
+
+The bundled `freemote-info-psb` adapter keeps transport separate from content handlers. It rebuilds complete info-PSB/body archives by overlaying only modified entries onto a raw extraction, then re-extracts build output for verification. Game profiles supply exact archive names, explicit resource allowlists, language slots, constrained JSON mutations, and local cryptographic configuration.

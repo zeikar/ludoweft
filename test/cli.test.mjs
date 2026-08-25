@@ -23,6 +23,7 @@ test('--json prints JSON while the default prints plain text', async () => {
   assert.doesNotThrow(() => JSON.parse(asJson));
   assert.throws(() => JSON.parse(asText));
   assert.match(asText, /id: demo-json/);
+  assert.match(asText, /id: freemote-info-psb/);
 });
 
 test('an unknown option is rejected instead of becoming the command', async () => {
@@ -45,4 +46,14 @@ test('inspect withholds adapter configuration from its output', () => withDemo(a
 
 test('an extra positional argument is rejected instead of ignored', async () => {
   await assert.rejects(() => main(['adapters', 'nosuchthing']), /unexpected argument: nosuchthing/);
+});
+
+test('import-jsonl requires explicit input and output paths', async () => {
+  await assert.rejects(() => main(['import-jsonl']), /--input is required/);
+  await assert.rejects(() => main(['import-jsonl', '--input', 'legacy']), /--output is required/);
+});
+
+test('import-only options are rejected by other commands', async () => {
+  await assert.rejects(() => main(['adapters', '--dry-run']), /only valid with import-jsonl/);
+  await assert.rejects(() => main(['adapters', '--input', 'legacy']), /only valid with import-jsonl/);
 });
