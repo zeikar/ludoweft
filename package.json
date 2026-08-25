@@ -1,7 +1,19 @@
 {
   "name": "ludoweft",
   "version": "0.0.3",
-  "description": "An agent-native pipeline for extracting, translating, validating, and rebuilding game resources.",
+  "description": "Agent-native game localization: extract, translate, validate, and rebuild moddable game resources through a deterministic CLI.",
+  "homepage": "https://github.com/zeikar/ludoweft#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeikar/ludoweft.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeikar/ludoweft/issues"
+  },
+  "author": {
+    "name": "zeikar",
+    "url": "https://github.com/zeikar"
+  },
   "type": "module",
   "bin": {
     "ludoweft": "./bin/ludoweft.mjs"
@@ -26,11 +38,16 @@
   },
   "keywords": [
     "agent",
+    "claude-code",
+    "claude-code-plugin",
+    "cli",
     "codex-plugin",
     "game-localization",
+    "jsonl",
     "localization",
     "modding",
-    "translation"
+    "translation",
+    "visual-novel"
   ],
   "license": "MIT"
 }

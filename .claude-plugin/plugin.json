@@ -1,7 +1,7 @@
 {
   "name": "ludoweft",
   "version": "0.0.3",
-  "description": "Agent-native game localization workflows and deterministic resource tooling.",
+  "description": "Agent-native game localization: extract, translate, validate, and rebuild moddable game resources through a deterministic CLI.",
   "author": {
     "name": "zeikar",
     "url": "https://github.com/zeikar"
@@ -10,10 +10,15 @@
   "repository": "https://github.com/zeikar/ludoweft",
   "license": "MIT",
   "keywords": [
+    "agent",
     "claude-code",
+    "claude-code-plugin",
+    "cli",
     "game-localization",
+    "jsonl",
     "localization",
     "modding",
-    "translation"
+    "translation",
+    "visual-novel"
   ]
 }
