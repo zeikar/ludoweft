@@ -18,6 +18,19 @@ They quote extracted source text, so they fall under the same boundary as the wo
 
 Build them after the first successful `export` and before the first translated batch. A workspace small enough for one uninterrupted session needs only a short shared note; anything split across batches, files, or workers needs all three.
 
+## Check what the game already ships
+
+Text-heavy games often carry their own terminology data: a tips or encyclopedia menu, a character roster, an item or skill database, an archive of in-game documents. When the game ships in more than one language, that resource is a bilingual glossary written by the original localization team, and it is stronger evidence than anything inferred from dialogue. It usually carries a category and a definition per term as well.
+
+Look for it before authoring entries. Search the extracted resource tree for names such as `tips`, `dic`, `glossary`, `word`, `term`, `encyclopedia`, `chrname`, or `database`, and inspect any file whose size stands out from its neighbours.
+
+Two cautions:
+
+- **The resource may sit outside the adapter's reach.** A file that yields no segments is still readable straight from the extracted tree, so mine it for terminology regardless. Report it as well: a resource that holds terminology is usually one the patch should be translating.
+- **Parallel language arrays are not always index-aligned.** A menu sorted for display follows each language's own collation, so entry 0 in one language and entry 0 in another describe different terms. Look for an index-conversion table stored beside the data, pair through it, and spot-check several pairs before trusting the set. A misaligned mining pass yields a glossary that is uniformly wrong and still reads as plausible.
+
+Treat what the resource yields as a proposal, not a decision. An official rendering still has to satisfy the project's style rules, and the target language is often not among the languages the game ships.
+
 ## Derive them from the workspace
 
 Read the exported JSONL, not memory and not a summary of the game. Count how often a term actually occurs and where, then decide it once.
@@ -25,6 +38,8 @@ Read the exported JSONL, not memory and not a summary of the game. Count how oft
 Record the segment `id` that decided each entry. A reviewer must be able to open that line and check the call.
 
 Bring contested names, honorific handling, and anything with an established community rendering to the user as a decision, with the options and the tradeoff. Do not import terminology from fan translations or wikis unprompted. Do not invent a reading for a name the source never disambiguates; mark those segments `blocked` and ask.
+
+Deriving these documents reads far more workspace text than translating a single batch does. Delegate that pass to a subagent when the host provides them, and require it to return the proposed entries and their deciding ids rather than the text it read. The coordinator's context is better spent on merges and validation, and a proposal carrying its own evidence stays checkable without a second reading pass.
 
 ## Glossary
 
