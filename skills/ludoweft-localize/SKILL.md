@@ -49,7 +49,7 @@ Run `extract`, then `export`, and validate the generated workspace before editin
 
 Read [references/glossary-and-style.md](references/glossary-and-style.md) next, then derive the project glossary, character voice guide, and style rules from the exported workspace before the first batch. The CLI never reads those documents, so consistency between batches, sessions, and workers depends entirely on them.
 
-For a large workspace, divide work by non-overlapping files or stable ID ranges when subagents are available. Give each worker `references/translation-workspace.md`, the glossary and voice entries in scope, the style rules, neighbouring context, and the exact writable files. A subagent does not inherit this SKILL.md, and without the workspace reference it will break the very rules `validate` rejects at merge time. The coordinator owns merges and validation; workers must not rebuild or install the game independently.
+Run the work as a team once the workspace outgrows a single context: preparation passes in parallel, translators partitioned by non-overlapping files or stable ID ranges, and reviewers that are separate agents from the translators who wrote the batch. Read [references/agent-team.md](references/agent-team.md) before fanning out — it covers file ownership, what each worker must be handed, and which stages never leave the coordinator.
 
 After translation:
 

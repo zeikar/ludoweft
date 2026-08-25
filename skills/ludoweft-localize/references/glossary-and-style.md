@@ -39,7 +39,7 @@ Record the segment `id` that decided each entry. A reviewer must be able to open
 
 Bring contested names, honorific handling, and anything with an established community rendering to the user as a decision, with the options and the tradeoff. Do not import terminology from fan translations or wikis unprompted. Do not invent a reading for a name the source never disambiguates; mark those segments `blocked` and ask.
 
-Deriving these documents reads far more workspace text than translating a single batch does. Delegate that pass to a subagent when the host provides them, and require it to return the proposed entries and their deciding ids rather than the text it read. The coordinator's context is better spent on merges and validation, and a proposal carrying its own evidence stays checkable without a second reading pass.
+Deriving these documents reads far more workspace text than translating a single batch does. Delegate each pass to its own subagent and require proposals carrying deciding ids rather than the text it read; [agent-team.md](agent-team.md) covers how the passes divide, what comes back, and who adopts it.
 
 ## Glossary
 

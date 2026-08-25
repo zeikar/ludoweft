@@ -10,7 +10,7 @@ The agent layer orchestrates translation; it does not replace the deterministic 
 - **Reviewer:** checks meaning, voice, terminology, placeholders, and neighboring-scene consistency.
 - **Build verifier:** runs validation and rebuild stages and reports evidence without silently installing files.
 
-Small projects do not need separate agents for every role. Parallel workers help only when batches are independent and the coordinator can validate the merge.
+Small projects do not need separate agents for every role. Parallel workers help only when batches are independent and the coordinator can validate the merge. `skills/ludoweft-localize/references/agent-team.md` turns these roles into the handoffs, file-ownership rules, and escalation paths an agent follows.
 
 ## Data boundary
 
