@@ -1,5 +1,7 @@
 # Ludoweft
 
+**English** · [한국어](README.ko.md)
+
 ![Ludoweft: game files to adapter to JSONL workspace to agent translate and review to validate to rebuild](.github/social-preview.png)
 
 [![CI](https://github.com/zeikar/ludoweft/actions/workflows/ci.yml/badge.svg)](https://github.com/zeikar/ludoweft/actions/workflows/ci.yml)
