@@ -1,15 +1,7 @@
+import { protectedTokenSource } from './slots.mjs';
+
 function pointerEscape(value) {
   return String(value).replaceAll('~', '~0').replaceAll('/', '~1');
-}
-
-function protectedTokenSource(slots) {
-  if (slots.protectedFrom === 'source' || slots.protectedFrom === 'reference') return slots.protectedFrom;
-  if (slots.protectedFrom !== 'destination') {
-    throw new Error('languageSlots.protectedFrom must be source, reference, or destination');
-  }
-  if (slots.destination === slots.source) return 'source';
-  if (slots.destination === slots.reference) return 'reference';
-  throw new Error('destination-based protected tokens require destination to match source or reference slot');
 }
 
 function stripSuffix(file, suffix) {

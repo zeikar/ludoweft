@@ -154,7 +154,7 @@ Schemas live in [`schemas/`](schemas/). Architecture and adapter boundaries are 
 
 ## FreeMote info-PSB adapter
 
-`freemote-info-psb` supports paired `*_info.psb.m` and `*_body.bin` archives through separately installed FreeMote tools. It provides `mages-scenario` (MAGES engine scenario scripts) and `localized-string-array` content handlers plus constrained `appendUnique` and `merge` JSON mutations. Archive names, keys, language slots, file allowlists, and game-specific mutations remain in the private project; the public adapter contains no game assets or keys and never downloads FreeMote implicitly.
+`freemote-info-psb` supports paired `*_info.psb.m` and `*_body.bin` archives through separately installed FreeMote tools. It provides `mages-scenario` (MAGES engine scenario scripts), `localized-string-array` (one string per language at each leaf), and `per-language-document` (one whole sub-document per language, paired through an index table when the languages are sorted independently) content handlers plus constrained `appendUnique` and `merge` JSON mutations. Archive names, keys, language slots, file allowlists, and game-specific mutations remain in the private project; the public adapter contains no game assets or keys and never downloads FreeMote implicitly.
 
 ## Plugins and the agent skill
 
