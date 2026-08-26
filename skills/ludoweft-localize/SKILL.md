@@ -33,7 +33,7 @@ Use the bundled path for every Ludoweft command in this workflow. Add `--json` w
 3. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories.
 4. Ludoweft has no install command. `build` writes to the project's output directory and never touches the live game. Copy files into a game directory only when the user asks, and back up every replaced file first.
 
-If the project has no supported adapter, run `adapters`, inspect the format, and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
+Engine behaviour that holds across titles is collected in `references/engines/`; read the entry matching the project's adapter. If the project has no supported adapter, run `adapters`, inspect the format, and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
 
 ## Adapter-specific setup
 
@@ -47,6 +47,8 @@ Read the entry that matches the project; skip the rest.
 Run `extract`, then `export`, and validate the generated workspace before editing. Read [references/translation-workspace.md](references/translation-workspace.md) completely before translating or reviewing JSONL.
 
 Read [references/glossary-and-style.md](references/glossary-and-style.md) next, then derive the project glossary, character voice guide, and style rules from the exported workspace before the first batch. The CLI never reads those documents, so consistency between batches, sessions, and workers depends entirely on them.
+
+Prove the target language renders before the first batch, not after it. Read [references/engine-checks.md](references/engine-checks.md), which links the reference for the project's engine. A translation that passes `validate` can still ship missing-glyph boxes, because fonts are declared per text layer and remapped independently.
 
 Run the work as a team once the workspace outgrows a single context: preparation passes in parallel, translators partitioned by non-overlapping files or stable ID ranges, and reviewers that are separate agents from the translators who wrote the batch. Read [references/agent-team.md](references/agent-team.md) before fanning out — it covers file ownership, what each worker must be handed, and which stages never leave the coordinator.
 

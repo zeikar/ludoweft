@@ -163,7 +163,7 @@ One skill serves both hosts. `skills/ludoweft-localize` describes the safe orche
 | Codex | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` |
 
-Both hosts install the whole repository and discover skills at `skills/<name>/SKILL.md`, so the manifests declare no custom component paths. The core CLI stays agent-agnostic: packaging for another coding agent reuses the same `src/`, schemas, adapters, and workflow contract without touching game project data.
+The skill also carries per-engine references under `skills/ludoweft-localize/references/engines/`, which describe markup, font faces, and tag formats that hold across titles on one engine; a file for a new engine is a welcome pull request. Both hosts install the whole repository and discover skills at `skills/<name>/SKILL.md`, so the manifests declare no custom component paths. The core CLI stays agent-agnostic: packaging for another coding agent reuses the same `src/`, schemas, adapters, and workflow contract without touching game project data.
 
 ## Roadmap
 
