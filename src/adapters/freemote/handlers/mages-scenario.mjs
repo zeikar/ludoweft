@@ -35,13 +35,23 @@ export const magesScenarioHandler = {
           throw new Error(`${file}: document.name is required when translatable scenario text exists`);
         }
         const id = `${document.name}#s${sceneIndex}:t${textIndex}`;
+        // The speaker sits beside the language array. Without it in context a translator
+        // cannot tell dialogue from narration, and a character voice guide is unusable.
+        const speaker = typeof text?.[0] === 'string' && text[0].length > 0 ? text[0] : undefined;
         segments.push({
           id,
           source,
           reference,
           protectedTokenSource: protectedFrom,
           protectedTokenProfile: resource.protectedTokenProfile ?? 'mages',
-          context: { archive, file: document.name, scene: sceneIndex, text: textIndex },
+          context: {
+            archive,
+            file: document.name,
+            scene: sceneIndex,
+            text: textIndex,
+            // Absent on narration, which is itself the signal that nobody is speaking.
+            ...(speaker === undefined ? {} : { speaker }),
+          },
           write(target) { languages[slots.destination][1] = target; },
         });
       });
