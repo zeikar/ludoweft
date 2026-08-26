@@ -33,10 +33,13 @@ test('a dialogue segment carries its speaker in context', () => {
   assert.equal(segments.find((s) => s.id === 'ch01.ks#s0:t2').context.speaker, 'まゆり');
 });
 
-test('narration carries no speaker key at all, rather than an empty one', () => {
+// Absence means the line carries no new speaker header. Callers still have to read it in
+// context: outside a threaded scene that means narration, inside one it means the previous
+// poster is still talking.
+test('a line with no speaker header carries no speaker key at all, rather than an empty one', () => {
   const narration = magesScenarioHandler.segments(document(), CONTEXT)
     .find((s) => s.id === 'ch01.ks#s0:t1');
-  assert.ok(!('speaker' in narration.context), 'absence is the signal that nobody is speaking');
+  assert.ok(!('speaker' in narration.context), 'an empty header must not become an empty speaker');
   assert.deepEqual(narration.context, {
     archive: 'story', file: 'ch01.ks', scene: 0, text: 1,
   });

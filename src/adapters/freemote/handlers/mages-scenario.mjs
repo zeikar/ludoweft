@@ -49,7 +49,10 @@ export const magesScenarioHandler = {
             file: document.name,
             scene: sceneIndex,
             text: textIndex,
-            // Absent on narration, which is itself the signal that nobody is speaking.
+            // Absent whenever the line carries no new speaker header. That is narration in
+            // an ordinary scene, but a threaded scene — a message board read on screen —
+            // uses the header for the poster and leaves continuation lines bare, so absence
+            // there means "same poster as above" instead.
             ...(speaker === undefined ? {} : { speaker }),
           },
           write(target) { languages[slots.destination][1] = target; },

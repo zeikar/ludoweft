@@ -36,6 +36,22 @@ A translator fills `target`, sets `status` to `translated`, and records itself i
 
 Neither role runs `apply`, `build`, or `verify`, and neither copies anything into a game directory.
 
+## Match the model to the kind of judgment
+
+Work in a localization run comes in three shapes, and only one of them needs the strongest model available.
+
+- **Deterministic transformation** — a glossary lookup, a fixed value map, a field that mirrors another, a format change. Write a script. It costs nothing, repeats exactly, and can be tested; no model can promise that it will render the same input the same way twice. Reach for a model here and settled terminology gets re-decided once per worker.
+- **Applying decisions already made** — translating against a glossary, style rules and a voice guide that carry the calls. A mid-tier model is enough, because the worker is applying judgment rather than forming it. This is the bulk of the work.
+- **Making or catching decisions** — deriving the glossary and voice guide, and reviewing what came back. Spend the strongest tier here. A merely adequate translation can be revised later; an error review fails to catch is already copied through every batch that followed it.
+
+Choose by whether the decision has been made, not by how important the text feels. The most expensive tier on a batch whose terminology is already fixed buys very little; the same tier on the review that guards twenty batches buys a great deal.
+
+## Keep parallel workers from diverging
+
+**Settle the open questions before fanning out.** Anything a style guide still lists as undecided will be decided independently by each worker, and their answers will not agree. In one run two workers given the same undecided punctuation rule produced opposite results across a shared file — one normalized every bracket to a single form, the other preserved three distinct forms — and reconciling them afterwards cost more than the decision would have.
+
+**Give each worker its own scratch path.** Workers pointed at one shared scratch directory choose the same obvious filenames and overwrite each other's intermediate work. Name the path per worker, or let each write only inside its own output file.
+
 ## The coordinator does not delegate the gates
 
 The coordinator owns merges, `validate`, glossary adoption, and the build stages, and is the only party that raises contested calls with the user.
