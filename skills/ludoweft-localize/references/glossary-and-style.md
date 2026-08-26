@@ -48,9 +48,9 @@ One row per term that must not vary between segments. Rejected variants are list
 ```markdown
 | Source | Target | Deciding id | Rejected | UI |
 |---|---|---|---|---|
-| 未来ガジェット研究所 | 미래 가제트 연구소 | resg00_01.ks#s1:t14 | 퓨처 가젯 연구소 | yes |
-| Dメール | D메일 | resg01_13.ks#s3:t2 | 디메일, D-메일 | yes |
-| リーディングシュタイナー | 리딩 슈타이너 | resg00_01.ks#s2:t31 | 리딩 슈타이너現象 | no |
+| 星辰議会 | 성진의회 | ch01_02#s2:t7 | 스텔라 카운슬, 별의회 | yes |
+| 忘却炉 | 망각로 | ch03_11#s1:t22 | 오블리비언 퍼니스 | no |
+| 灰の刻 | 잿빛 시각 | ch02_05#s4:t3 | 애쉬 아워, 재의 시간 | yes |
 ```
 
 Also record how a term inflects, attaches particles, or pluralizes in the target language when that is not obvious from the target column.
@@ -62,14 +62,14 @@ Cover proper nouns, invented terminology, organization and device names, recurri
 One entry per speaker who has more than a handful of lines:
 
 ```markdown
-### 岡部倫太郎 / 오카베 린타로
+### 灰森隊長 / 하이모리 대장
 
-- First person: 俺 → "나", but 鳳凰院凶真 mode uses "이 몸"
-- Address: 助手 → "조수", never "크리스" while in character
-- Politeness: plain form throughout; drops to polite only with Mr. Braun
-- Tics: フゥーハハハ → "후하하하하" (fixed); エル・プサイ・コングルゥ → "엘 프사이 콩그루" (fixed)
-- Register shift: mid-scene drop to plain sincerity after a D-mail failure
-- Examples: resg00_01.ks#s1:t0, resg01_13.ks#s3:t18
+- First person: 俺 → "나", but shifts to 私 → "저" in front of the council
+- Address: calls every squadmate by rank, never by given name while on duty
+- Politeness: plain form with the squad, polite form on the bridge
+- Tics: へっ → "훗" (fixed)
+- Register shift: drops to flat plain form mid-scene once a mission has failed
+- Examples: ch01_02#s2:t7, ch03_11#s1:t22
 ```
 
 Derive each entry from lines the speaker actually has. When the workspace exposes a speaker in `context`, group by it; otherwise identify speakers while reading a scene in order and record the ids used.
@@ -80,7 +80,7 @@ Cover what the glossary and the voice guide do not:
 
 - the default register for narration, UI, and system messages
 - punctuation, ellipsis, quotation marks, and numeral conventions
-- where protected tokens sit in a sentence — `translation-workspace.md` covers which slot `protectedTokenSource` names and how occurrences are counted
+- where protected tokens sit in a sentence — [translation-workspace.md](translation-workspace.md) covers which slot `protectedTokenSource` names and how occurrences are counted
 - the line-break policy, and any length limit, named together with the constraint that causes it
 - how to handle text the source deliberately leaves in another language
 - which situations to mark `blocked` instead of guessing
@@ -93,6 +93,4 @@ When a decision changes, list the affected segment ids and revise them. A re-exp
 
 ## Hand off to workers
 
-Give each worker `references/translation-workspace.md`, the glossary entries and voice entries in scope, the full style rules, the assigned files, and the neighbouring context needed to read a scene in order. A worker that never sees the workspace reference does not know which fields are editable or how protected tokens are counted.
-
-Workers propose glossary additions; they do not adopt them. The coordinator decides, records the entry, and republishes it, so a term first met in one batch is rendered the same way in every other.
+[agent-team.md](agent-team.md) owns the handoff: what each worker receives and how to address the files it must read, who may write which file, and why workers propose glossary entries while only the coordinator adopts them.

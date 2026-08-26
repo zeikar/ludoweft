@@ -32,4 +32,15 @@ Findings that hold for an engine rather than for one game belong upstream. `refe
 
 - [engines/mages.md](engines/mages.md) — MAGES visual novels, reached through the `freemote-info-psb` adapter.
 
-Read the entry that matches the project's adapter before the first batch, and extend it when a run teaches something new.
+Read the entry that matches the project's engine before the first batch — each entry names the adapters that reach it — and extend it when a run teaches something new.
+
+## Adding an engine file
+
+A new engine file is a welcome contribution. Follow what the existing entries already do:
+
+- Name the file after the engine in lowercase, not after the adapter that reaches it. One adapter can serve more than one engine, and one engine can be reached by more than one adapter.
+- Open by naming those adapters, the basis for the findings, and the rule that per-game facts stay in the project repository.
+- Add the file to the list above by hand. Nothing scans the directory, so an unlisted entry is invisible.
+- Mark anything confirmed by running the game as **Verified in-game:** and leave the rest plainly stated as inference. That distinction is the most valuable thing in an engine file.
+
+Describing markup is a documentation change. Teaching the CLI a new protected-token profile is not: profile names are a fixed allowlist in the core, so a new one needs a code change and a test rather than a reference file.

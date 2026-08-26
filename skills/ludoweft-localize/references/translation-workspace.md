@@ -26,6 +26,6 @@ Do not edit `id`, `source`, `reference`, `sourceHash`, `protectedTokenSource`, `
 - Follow the project glossary, character voice guide, and style rules. [glossary-and-style.md](glossary-and-style.md) gives their canonical paths; ask the coordinator when a batch arrives without them.
 - Mark uncertain entries `blocked` and explain the issue in `note` instead of guessing silently.
 
-## Parallel batches
+## Batch boundaries
 
-Partition by file first and stable ID second. Never assign the same JSONL file to multiple writers unless the environment provides isolated branches or worktrees and the coordinator expects to resolve conflicts. Review agents may read across batches but should write only their assigned output.
+Write only the files this batch was assigned. Reading neighbouring files for context is expected; editing a row outside the assignment is not. The coordinator partitions the work and owns the merge.

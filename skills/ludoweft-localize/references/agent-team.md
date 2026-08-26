@@ -22,11 +22,11 @@ Each returns a proposal carrying deciding ids, never the text it read. The coord
 
 ## Translation and review are separate agents
 
-Partition by file first and stable id second, and keep whole scenes in one batch. A translator that cannot read a scene in order gets voice, referents, and pronouns wrong.
+Partition by file first and stable ID second, and keep whole scenes in one batch. A translator that cannot read a scene in order gets voice, referents, and pronouns wrong.
 
 Hand every translator:
 
-- [translation-workspace.md](translation-workspace.md) — a subagent does not inherit `SKILL.md`, and without it will edit generated fields or miscount protected tokens
+- [translation-workspace.md](translation-workspace.md), handed over as a resolved absolute path or as its contents. A subagent inherits neither `SKILL.md` nor the skill directory, so a relative link means nothing to it; resolve the path the way `SKILL.md` resolves the bundled CLI. Without that file a worker edits generated fields or miscounts protected tokens
 - the glossary and voice entries in scope, plus the full style rules
 - the exact writable files, and the neighbouring context needed to read scenes in order
 

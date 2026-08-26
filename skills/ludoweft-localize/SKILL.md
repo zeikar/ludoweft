@@ -1,6 +1,6 @@
 ---
 name: ludoweft-localize
-description: This skill should be used when a project contains ludoweft.project.json, or when the user asks to extract, translate, patch, or rebuild text in moddable game files, including FreeMote info-PSB and MAGES visual-novel archives. It covers resource inspection, extraction, JSONL translation, review, validation, and rebuilding through the Ludoweft CLI. It should not be used for runtime OCR, text-hook translation, application i18n frameworks, or plain document translation.
+description: This skill should be used for game localization patches — when a project contains ludoweft.project.json, or when the user asks to localize, extract, translate, review, patch, or rebuild text in moddable game files, such as FreeMote info-PSB archives and MAGES visual novels. It covers resource inspection, extraction, JSONL translation, glossary and terminology consistency, in-game font and glyph checks, review, validation, and rebuilding through the Ludoweft CLI. It should not be used for runtime OCR, text-hook translation, application i18n frameworks, or plain document translation.
 ---
 
 # Ludoweft localization
@@ -30,33 +30,39 @@ Use the bundled path for every Ludoweft command in this workflow. Add `--json` w
 
 1. Locate `ludoweft.project.json` and run the bundled CLI's `inspect` command. `adapters` lists the installed resource adapters and needs no manifest. If the repository is empty, use `init` only after the adapter and source/target languages are known; do not guess them. `init` creates an adapter-neutral skeleton, so add the selected adapter's project-authored configuration before expecting `inspect` to succeed.
 2. Check whether the project already carries a glossary, character voice guide, and style rules, and extend them rather than authoring new ones. [references/glossary-and-style.md](references/glossary-and-style.md) gives their canonical paths.
-3. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories.
+3. Keep commercial assets, extracted source text, local installation paths, archive keys, and tool binaries out of public repositories. `init` edits the project's `.gitignore` and adds rules for `*.local.json`, `game-data/`, `.ludoweft/`, and `dist/` only. It does not ignore the translation workspace or the glossary directory, and both hold extracted source text in every row — add those rules deliberately, or confirm with the user that the repository is private.
 4. Ludoweft has no install command. `build` writes to the project's output directory and never touches the live game. Copy files into a game directory only when the user asks, and back up every replaced file first.
 
-Engine behaviour that holds across titles is collected in `references/engines/`; read the entry matching the project's adapter. If the project has no supported adapter, run `adapters`, inspect the format, and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
+If the project has no supported adapter, run `adapters`, inspect the format, and propose an adapter boundary. Do not invent archive keys, command flags, or binary structures.
 
 ## Adapter-specific setup
 
 Read the entry that matches the project; skip the rest.
 
 - **FreeMote info-PSB.** `freemote-info-psb` requires separately installed FreeMote tools and project-authored archive configuration. A private project must supply `adapterConfig`, `paths.freeMote`, and any local overlay after `init`. Never guess those values or download the tools implicitly.
-- **Legacy JSONL trees.** For a legacy `ja`/`en`/`ko` tree, run `import-jsonl --dry-run` into a separate destination first, then reconcile it with a fresh adapter export. Manifest `paths` resolve against the manifest's directory, but `--input` and `--output` resolve against the current working directory. Non-empty imported targets are `draft` until reviewed, validated, and explicitly promoted to `translated` or `reviewed`.
+- **Legacy JSONL trees.** For a legacy `ja`/`en`/`ko` tree, run `import-jsonl --dry-run` into a destination that does not exist yet; the command refuses to write into an existing directory, so importing straight into `translations/` fails outright. Reconcile the result with a fresh adapter export afterwards. Manifest `paths` resolve against the manifest's directory, but `--input` and `--output` resolve against the current working directory. Non-empty imported targets are `draft` until reviewed, validated, and explicitly promoted to `translated` or `reviewed`.
 
 ## Translation workflow
 
-Run `extract`, then `export`, and validate the generated workspace before editing. Read [references/translation-workspace.md](references/translation-workspace.md) completely before translating or reviewing JSONL.
+### Before the first batch
 
-Read [references/glossary-and-style.md](references/glossary-and-style.md) next, then derive the project glossary, character voice guide, and style rules from the exported workspace before the first batch. The CLI never reads those documents, so consistency between batches, sessions, and workers depends entirely on them.
+Run `extract`, then `export`, and validate the generated workspace before editing anything.
 
-Prove the target language renders before the first batch, not after it. Read [references/engine-checks.md](references/engine-checks.md), which links the reference for the project's engine. A translation that passes `validate` can still ship missing-glyph boxes, because fonts are declared per text layer and remapped independently.
+Prove the target language renders next. It is the cheapest check available and the only one whose failure invalidates the rest of the plan. Read [references/engine-checks.md](references/engine-checks.md), which carries the general procedure and links the reference for the project's engine under `references/engines/`. A translation that passes `validate` can still ship missing-glyph boxes, because fonts are commonly declared per text layer and remapped independently.
+
+Then derive the project glossary, character voice guide, and style rules from the exported workspace, following [references/glossary-and-style.md](references/glossary-and-style.md). The CLI never reads those documents, so consistency between batches, sessions, and workers depends entirely on them. That pass reads far more text than a single batch does, so run it once the render check has cleared and never before.
+
+### Running batches
+
+Read [references/translation-workspace.md](references/translation-workspace.md) completely before translating or reviewing JSONL. It owns the row contract: which fields are editable, which are regenerated on every export, and how protected tokens are counted.
 
 Run the work as a team once the workspace outgrows a single context: preparation passes in parallel, translators partitioned by non-overlapping files or stable ID ranges, and reviewers that are separate agents from the translators who wrote the batch. Read [references/agent-team.md](references/agent-team.md) before fanning out — it covers file ownership, what each worker must be handed, and which stages never leave the coordinator.
 
-After translation:
+### After translation
 
-1. Run the bundled CLI's `validate` command. It reports malformed JSONL, duplicate IDs, corrupted `sourceHash` values, protected tokens that do not match their configured source or reference slot, and placeholder counts that differ from the target.
-2. Resolve every reported error. Do not edit `sourceHash` or `protectedTokens` to silence a check — validation compares them against the segment's own source and will reject the edit.
-3. Re-run `export` after any upstream change. Segments whose source moved on come back as `stale` with the old translation kept in `target` and the old text in `previousSource`; revise them and set the status back to `translated` or `reviewed`. Segments marked `orphaned` no longer exist upstream and need no work.
+1. Run the bundled CLI's `validate` command. It reports malformed JSONL, duplicate IDs, corrupted `sourceHash` values, protected tokens that do not match their configured source or reference slot, and placeholder counts that differ from the target. On failure it writes the error list as plain text to stderr and exits non-zero; the structured `--json` object exists only when validation passes, so read stderr on a failing run rather than parsing stdout.
+2. Resolve every reported error. Do not edit `sourceHash` or `protectedTokens` to silence a check — validation recomputes both from the segment's own text and will reject the edit. The workspace reference covers the field-level rules.
+3. Re-run `export` after any upstream change. It reports `stale` and `orphaned` counts; the workspace reference explains what each status means for a row and which of them still needs work.
 4. Run `apply`, `build`, and `verify`. All three refuse to run while any segment is `stale`, while a workspace row is missing for an extracted segment, or while a `sourceHash` no longer matches the extracted source — rerun `export` when that happens. Only `translated` and `reviewed` segments reach a build; every other segment is counted in `skipped`. Check that `applied` and `skipped` match the expected counts before trusting the build.
 5. Report progress from `validate`'s `byStatus` map, never from its `translated` field. That field counts every non-empty `target` regardless of status, so it also counts `draft`, `blocked`, and `stale` rows that no build will ship, and it overstates progress badly right after `import-jsonl`. Report build evidence and the glossary revision the batch was translated against. Keep installation as a separate, explicitly authorized action.
 

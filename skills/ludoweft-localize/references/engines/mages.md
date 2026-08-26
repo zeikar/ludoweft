@@ -8,7 +8,7 @@ Resources carry every language in parallel. A title shipping four languages expo
 
 Two different layouts exist, and they are not interchangeable:
 
-- **Language at the leaf.** Text sits in an array of one string per language, so the language axis is at the bottom of the tree. The `localized-string-array` handler finds exactly this shape.
+- **Language at the leaf.** Text sits in an array of one string per language, so the language axis is at the bottom of the tree. The `localized-string-array` handler finds exactly this shape, matching a leaf array whose length equals the resource's `arrayLength` — 4 unless the project sets it, so a title shipping a different number of languages must say so. The match is a pure shape test, so an unrelated array of that many strings in the same document is picked up as segments too.
 - **Language at the root.** The document is an array of complete per-language documents, one per slot. `localized-string-array` finds nothing here, because it looks for leaf arrays of strings. A resource like this needs its own handler; adding the file to `include` is not enough.
 
 A root-language resource can also sort each language independently, so index *i* in one slot and index *i* in another are unrelated entries. Look for an index-conversion table stored beside the data and pair through it. Verify that any such tables are exact inverse permutations before trusting them.
@@ -27,12 +27,18 @@ Remapping only the body face leaves ruby drawn with the original font. Body text
 
 **Verified in-game:** adding `ruby` to the facemap turns the boxes into correct glyphs with no other change.
 
+## The token profile is per resource, not per engine
+
+`mages-scenario` defaults to the `mages` protected-token profile. Every other handler defaults to `default`, so a resource that is not scenario text — a localized string array in the same archive, for instance — gets the profile only when the project sets `protectedTokenProfile` on that resource.
+
+Without it the generic patterns apply and both failures the profile exists to prevent come back: the percent-wrapped placeholder pattern joins `%CContinue%p` into one token, and the generic markup pattern claims a whole `<name,index,display>` tag, forcing the reference language into every target. Neither is reported. `validate` passes and the wrong text ships.
+
 ## Cross-reference tags
 
-Scenario text carries tags of the form `<name,index,display>`. The display field is localized along with the rest of the line; the structural head is not. The `mages` protected-token profile claims `<name,index,` for exactly this reason — protecting the whole tag would force the reference language into every target.
+Scenario text carries tags of the form `<name,index,display>`. The display field is localized along with the rest of the line; the structural head is not. The `mages` protected-token profile claims `<name,index,` for exactly this reason — protecting the whole tag would force the reference language into every target. It only applies where the resource actually uses the profile; see the section above.
 
 The index in these tags may not share the origin of an index-conversion table in the resource the tag points at. One shipped title uses 1-based tags against 0-based table indices. Check the offset against a known pair rather than assuming.
 
 ## Control codes
 
-`%C` and `%p` are two-character controls that can be followed immediately by text or by another control, as in `%CContinue%p`. `%%C` also occurs. The `mages` profile claims these ahead of the generic percent-wrapped placeholder pattern so it cannot join two controls into one token.
+`%C` and `%p` are two-character controls that can be followed immediately by text or by another control, as in `%CContinue%p`. `%%C` also occurs. The `mages` profile claims these ahead of the generic percent-wrapped placeholder pattern so it cannot join two controls into one token — again, only on resources that use the profile.
