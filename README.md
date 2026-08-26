@@ -1,5 +1,6 @@
 # Ludoweft
 
+[![CI](https://github.com/zeikar/ludoweft/actions/workflows/ci.yml/badge.svg)](https://github.com/zeikar/ludoweft/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](package.json)
 [![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange.svg)](#)
