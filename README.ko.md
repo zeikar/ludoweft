@@ -33,6 +33,30 @@ CLI는 모델 제공자를 직접 호출하지 않습니다. Codex, Claude 또�
 
 Ludoweft는 상용 게임 에셋, 추출된 텍스트, 아카이브 키, 재배포할 수 없는 서드파티 도구를 결코 포함하지 않습니다.
 
+## 지원 게임과 엔진
+
+**Ludoweft는 한글패치를 배포하지 않습니다. 한글패치를 만드는 도구입니다.**
+아래 타이틀의 번역 파일은 이 저장소에서 받을 수 없습니다.
+
+| 게임 | 엔진 / 포맷 | 어댑터 | 상태 |
+|---|---|---|---|
+| STEINS;GATE RE:BOOT (슈타인즈 게이트 리부트) | MAGES info-PSB | `freemote-info-psb` | 실제 타이틀로 검증 |
+| STEINS;GATE (슈타인즈 게이트) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| STEINS;GATE 0 (슈타인즈 게이트 제로) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| STEINS;GATE ELITE (슈타인즈 게이트 엘리트) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| CHAOS;HEAD NOAH (카오스 헤드 노아) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| CHAOS;CHILD (카오스 차일드) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| ROBOTICS;NOTES ELITE (로보틱스 노츠 엘리트) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| ROBOTICS;NOTES DaSH (로보틱스 노츠 대시) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| ANONYMOUS;CODE (아노니머스 코드) | MAGES info-PSB | `freemote-info-psb` | 같은 엔진 계열, 미검증 |
+| — | 일반 JSON 리소스 | `demo-json` | 합성 픽스처 전용 |
+
+*미검증*은 엔진 계열이 같을 뿐 아직 아무도 그 타이틀로 라운드트립을 돌려보지 않았다는
+뜻이며, 동작이 보장된다는 뜻이 아닙니다. 같은 엔진이라도 타이틀마다 패키징이 다르므로
+해당 행은 출발점으로만 보시고 프로젝트의 `adapterConfig`는 직접 작성하셔야 합니다.
+`freemote-info-psb`는 `stability: experimental` 상태입니다. 동작한 타이틀이든 실패한
+타이틀이든 알려주시면 그 사실을 적은 행으로 옮기겠습니다.
+
 ## 빠른 시작
 
 요구 사항: Node.js 20 이상.

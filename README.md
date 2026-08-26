@@ -33,6 +33,32 @@ The initial scope is file-based localization patches for text-heavy PC games —
 
 Ludoweft never includes commercial game assets, extracted text, archive keys, or third-party tools that cannot be redistributed.
 
+## Supported games and engines
+
+**Ludoweft does not distribute translation patches. It is the toolkit you build one with.**
+No translated text for any title below ships from this repository.
+
+| Title | Engine / format | Adapter | Status |
+|---|---|---|---|
+| STEINS;GATE RE:BOOT | MAGES info-PSB | `freemote-info-psb` | verified against the shipped title |
+| STEINS;GATE | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| STEINS;GATE 0 | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| STEINS;GATE ELITE | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| CHAOS;HEAD NOAH | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| CHAOS;CHILD | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| ROBOTICS;NOTES ELITE | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| ROBOTICS;NOTES DaSH | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| ANONYMOUS;CODE | MAGES info-PSB | `freemote-info-psb` | same engine family, untested |
+| — | plain JSON resources | `demo-json` | synthetic fixtures only |
+
+*Untested* means the engine family matches and nobody has run the round trip on that
+title yet, not that it works. Packaging differs between titles even on one engine, so
+treat those rows as a starting point and expect to write the project's `adapterConfig`
+yourself. `freemote-info-psb` is `stability: experimental`. Report a title that works —
+or one that does not — and it moves to a row that says so.
+
+Korean readers: [한국어 목록](README.ko.md#지원-게임과-엔진).
+
 ## Quick start
 
 Requirements: Node.js 20 or newer.
