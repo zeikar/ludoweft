@@ -1,0 +1,170 @@
+<!doctype html>
+<!--
+  Source for the repository's social preview card (GitHub: Settings -> General
+  -> Social preview). GitHub does not expose that upload over its API, so
+  regenerate here and upload social-preview.png by hand.
+
+  Regenerate at exactly 1280x640:
+    python3 -m http.server 8787 --bind 127.0.0.1   # from this directory
+    # then screenshot http://127.0.0.1:8787/social-preview.html
+    # at a 1280x640 viewport and save it as social-preview.png
+-->
+<meta charset="utf-8">
+<title>Ludoweft social preview</title>
+<style>
+  :root {
+    --bg: #0a0d13;
+    --ink: #e8eef6;
+    --muted: #7d8998;
+    --line: #1e2733;
+    --panel: #10151d;
+    --cli: #4fd6bd;
+    --agent: #f3b13f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 640px; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow: hidden;
+  }
+  /* one light source, upper left, so the wordmark sits in the brightest part */
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(760px 460px at 14% 6%, rgba(79,214,189,.10), transparent 62%),
+      radial-gradient(620px 420px at 88% 96%, rgba(243,177,63,.07), transparent 60%);
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(1150px 760px at 26% 34%, #000 18%, transparent 92%);
+  }
+  .card {
+    position: relative;
+    height: 100%;
+    padding: 64px 76px 56px;
+    display: flex;
+    flex-direction: column;
+  }
+  .wordmark {
+    font-size: 84px;
+    font-weight: 700;
+    letter-spacing: -.035em;
+    line-height: 1;
+  }
+  .wordmark .dot { color: var(--cli); }
+  .tagline {
+    margin-top: 18px;
+    font-size: 31px;
+    font-weight: 400;
+    letter-spacing: -.012em;
+    color: #b6c2d1;
+  }
+
+  .flow { margin-top: auto; margin-bottom: auto; }
+  .chain {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  .node {
+    flex: 1 1 0;
+    min-height: 108px;
+    border: 1px solid rgba(79,214,189,.26);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(79,214,189,.055), rgba(79,214,189,.015));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 12px 8px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 17px;
+    letter-spacing: -.01em;
+    color: #cfe2de;
+    text-align: center;
+  }
+  .node span { display: block; }
+  .node.agent {
+    border-color: rgba(243,177,63,.5);
+    background: linear-gradient(180deg, rgba(243,177,63,.10), rgba(243,177,63,.03));
+    color: #fbdfa6;
+    box-shadow: 0 0 0 1px rgba(243,177,63,.10), 0 8px 34px -14px rgba(243,177,63,.55);
+  }
+  .arrow {
+    flex: 0 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5c6f86;
+    font-size: 19px;
+  }
+
+  .legend {
+    margin-top: 26px;
+    display: flex;
+    gap: 30px;
+    font-size: 17px;
+    color: var(--muted);
+    letter-spacing: -.005em;
+  }
+  .legend i { font-style: normal; display: inline-flex; align-items: center; gap: 9px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  .swatch.cli { background: var(--cli); }
+  .swatch.agent { background: var(--agent); }
+
+  .meta {
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 17px;
+    color: var(--muted);
+    letter-spacing: -.005em;
+  }
+  .meta .repo {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    color: #97a4b4;
+  }
+</style>
+<div class="glow"></div>
+<div class="grid"></div>
+<div class="card">
+  <div class="wordmark">Ludoweft<span class="dot">.</span></div>
+  <div class="tagline">Let coding agents localize games.</div>
+
+  <div class="flow">
+  <div class="chain">
+    <div class="node"><span>game</span><span>files</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><span>adapter</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><span>JSONL</span><span>workspace</span></div>
+    <div class="arrow">→</div>
+    <div class="node agent"><span>translate</span><span>&amp; review</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><span>validate</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><span>rebuild</span></div>
+  </div>
+
+  <div class="legend">
+    <i><span class="swatch cli"></span>deterministic CLI</i>
+    <i><span class="swatch agent"></span>agent judgment</i>
+  </div>
+  </div>
+
+  <div class="meta">
+    <span class="repo">github.com/zeikar/ludoweft</span>
+    <span>MIT · Node 20+ · Claude Code &amp; Codex plugin</span>
+  </div>
+</div>
