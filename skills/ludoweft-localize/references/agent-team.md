@@ -58,7 +58,17 @@ Choose by whether the decision has been made, not by how important the text feel
 
 Punctuation does not. In the same run one worker rewrote the source's quotation marks into the form ordinary in the target language while the other preserved them, and the same split had happened in an earlier batch on the same rule. A rule that tells a worker to preserve something the target language would normally change is the rule that breaks, and it breaks quietly — the text reads correctly either way, so only a comparison finds it.
 
-So verify what diverges rather than what you fear diverging. Extract the punctuation from source and translation, compare the sequences, and reconcile mechanically before merging. Checking terms by hand mostly confirms they already agree.
+A wider run said the same thing louder. Four workers, four files, and a term list checked across every file translated so far: one mismatch, and it was the coordinator's own — a glossary entry adopted with different spacing than the batch that coined it. The formatting split twice more, on two axes nobody had thought to decide: whether an honorific suffix takes a space before it, and which of two nearly identical middle-dot characters to use.
+
+So verify what diverges rather than what you fear diverging. Extract the punctuation and spacing from source and translation, compare the sequences, and reconcile mechanically before merging. Checking terms by hand mostly confirms they already agree.
+
+Expect the axis to be new each time. These splits are not one recurring bug to be fixed once — they are wherever the style guide happens to stop, and every batch finds a different edge. Settle each as it appears, and write down why the answer is what it is: the honorific rule ended up spacing one suffix and not another, and a note saying only "space them" would have been undone by the next worker who met the exception.
+
+## Correcting a worker that is already running
+
+Send the decision, not the repair. A message saying "the file currently says X and I am fixing it to Y" is self-invalidating: by the time the worker reads it you have made the fix, the worker checks, finds Y, and concludes your message was false. One worker did exactly that and reported the coordinator's message as a possible impersonation attempt — correct instinct, wrong conclusion, and it wasted the worker's time. Say what the value is now.
+
+Assume the correction does not reach everyone. It reaches the workers you message; workers launched before it and never told will finish carrying the old value, and a worker that rewrites its output file after you edit that file in place will silently revert your edit. Both happened in one run. Sweep every deliverable for the corrected term at merge time and treat the messages as an optimization, not as the mechanism.
 
 ## The coordinator does not delegate the gates
 
