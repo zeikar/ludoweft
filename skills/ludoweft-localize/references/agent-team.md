@@ -76,6 +76,12 @@ The coordinator owns merges, `validate`, glossary adoption, and the build stages
 
 Delegating validation defeats it. A worker that writes a batch and then validates its own batch reports the result it was hoping for.
 
+**Segments that share a source must share a target.** Group every translated row by its source text and flag any group whose targets disagree. It is the cheapest cross-file consistency check there is: it needs no glossary, no term list and no judgment, and it finds exactly the divergence that matters — the same line, rendered two ways, in a game that will show both.
+
+A repeated block is where it lands. One title had a three-line scene appearing in two files; two workers who could not see each other produced identical text for the first and third lines and different text for the second. Nothing else would have caught it — no term was involved, both readings were good Korean, and both files validated clean.
+
+Run it after each merge alongside `validate`. Thirteen shared-source groups across the whole workspace took one pass to check.
+
 Run `validate` after every merge rather than once at the end. A protected-token error caught at the first merge costs one batch to fix; the same error found after twenty batches costs a re-read of all twenty.
 
 Escalate to the user rather than around them: contested terminology, culturally sensitive material, UI strings that cannot meet a length limit, and anything a reviewer has marked `blocked` twice.
