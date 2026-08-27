@@ -54,6 +54,12 @@ Choose by whether the decision has been made, not by how important the text feel
 
 **Give each worker its own scratch path.** Workers pointed at one shared scratch directory choose the same obvious filenames and overwrite each other's intermediate work. Name the path per worker, or let each write only inside its own output file.
 
+**Spend the consistency budget on formatting, not on words.** Two workers translating adjacent files blind to each other agreed on every shared term the glossary had missed — ten loanwords and names, all rendered identically, and identically again to a batch translated days earlier. Vocabulary converges on its own, because the target language's own conventions are strong enough to lead independent workers to the same answer.
+
+Punctuation does not. In the same run one worker rewrote the source's quotation marks into the form ordinary in the target language while the other preserved them, and the same split had happened in an earlier batch on the same rule. A rule that tells a worker to preserve something the target language would normally change is the rule that breaks, and it breaks quietly — the text reads correctly either way, so only a comparison finds it.
+
+So verify what diverges rather than what you fear diverging. Extract the punctuation from source and translation, compare the sequences, and reconcile mechanically before merging. Checking terms by hand mostly confirms they already agree.
+
 ## The coordinator does not delegate the gates
 
 The coordinator owns merges, `validate`, glossary adoption, and the build stages, and is the only party that raises contested calls with the user.
