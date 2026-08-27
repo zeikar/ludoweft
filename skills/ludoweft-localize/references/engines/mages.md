@@ -9,9 +9,17 @@ Resources carry every language in parallel. A title shipping four languages expo
 Two different layouts exist, and they are not interchangeable:
 
 - **Language at the leaf.** Text sits in an array of one string per language, so the language axis is at the bottom of the tree. The `localized-string-array` handler finds exactly this shape, matching a leaf array whose length equals the resource's `arrayLength` — 4 unless the project sets it, so a title shipping a different number of languages must say so. The match is a pure shape test, so an unrelated array of that many strings in the same document is picked up as segments too.
-- **Language at the root.** The document holds one complete sub-document per slot. `localized-string-array` finds nothing here, because it looks for leaf arrays of strings; use `per-language-document` instead, pointing it at the language array, the entry list inside each language, and the fields to translate. Adding the file to an existing resource's `include` is not enough — the shape needs the other handler.
+- **Language at the root.** The document holds one complete sub-document per slot. `localized-string-array` finds nothing here, because it looks for leaf arrays of strings; use `per-language-document` instead. It takes `languagePointer` (the language array, `/language` by default), `entryPointer` (the entry list inside each language), and `fields` (which keys of an entry to translate). Adding the file to an existing resource's `include` is not enough — the shape needs the other handler.
 
 A root-language resource can also sort each language independently, so index *i* in one slot and index *i* in another are unrelated entries. Look for an index-conversion table stored beside the data and give its pointer to `per-language-document` as `indexPointer`; the handler pairs through it and refuses a table that is not a permutation of the entry list. Without that pointer it pairs by position, which is correct only for resources that share one order.
+
+## An absent speaker is not always narration
+
+`mages-scenario` puts a scene's speaker in a segment's `context` when the text carries one. It is missing whenever the line does not open a new speaker header, and that covers two unrelated cases: ordinary narration, and a row that continues the previous speaker's own block.
+
+The second case is easy to miss and expensive when missed. Message-board scenes are built from post headers, and every line after a header until the next one belongs to that poster. Rendering those in the narrator's voice breaks the thread. In one title, 96 of the header-less rows were continuations rather than narration, across four files.
+
+Decide by looking at the surrounding rows rather than by the field alone: if a nearby speaker looks like a post header rather than a character name, treat every header-less row until the next header as the same writer continuing.
 
 ## Ruby
 
