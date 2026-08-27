@@ -32,6 +32,8 @@ Hand every translator:
 
 A translator fills `target`, sets `status` to `translated`, and records itself in `translatedBy`. It escalates a contested call as `blocked` with the reason in `note` instead of guessing.
 
+**Give the worker somewhere to report what it had to decide.** A brief that asks only for translated rows gets only translated rows: a worker meets a term the glossary does not cover, chooses well, and says nothing, so the choice stays invisible until a reviewer finds it or the next batch answers differently. One batch coined ten renderings that way and surfaced none. Ask for those decisions as a named part of the deliverable, and read an empty list on a long batch as a worker that did not notice rather than a batch that raised nothing.
+
 **Review is a different agent from the one that translated the batch.** An agent reviewing its own output re-reads its own reasoning and confirms it. A reviewer checks meaning against the source, adherence to the glossary and voice guide, protected tokens, and consistency with neighbouring scenes — which it may read but must not write. It promotes what it accepts to `reviewed` and records `reviewedBy`, and returns what it cannot resolve as `blocked`.
 
 Neither role runs `apply`, `build`, or `verify`, and neither copies anything into a game directory.
