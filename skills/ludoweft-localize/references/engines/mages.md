@@ -42,3 +42,7 @@ The index in these tags may not share the origin of an index-conversion table in
 ## Control codes
 
 `%C` and `%p` are two-character controls that can be followed immediately by text or by another control, as in `%CContinue%p`. `%%C` also occurs. The `mages` profile claims these ahead of the generic percent-wrapped placeholder pattern so it cannot join two controls into one token — again, only on resources that use the profile.
+
+Because the percent sign is a control head, a percent sign that means "percent" is written `%`. This escape is not a protected token, so `validate` compares nothing and a missing backslash passes every gate — the engine then reads the following character as a control and the line renders wrong. Check the shipped localizations for which convention they use before the first batch: in one game every one of the 45 literal percent signs was escaped and every unescaped one was a control head, so the rule was decidable by counting.
+
+Escapes like this are the class of engine detail worth searching for deliberately. A translator meeting one mid-batch will usually route around it — writing the word instead of the sign — and the convention stays undiscovered until a later batch writes it plainly and ships it broken.
