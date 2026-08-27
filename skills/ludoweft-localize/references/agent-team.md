@@ -64,6 +64,20 @@ So verify what diverges rather than what you fear diverging. Extract the punctua
 
 Expect the axis to be new each time. These splits are not one recurring bug to be fixed once — they are wherever the style guide happens to stop, and every batch finds a different edge. Settle each as it appears, and write down why the answer is what it is: the honorific rule ended up spacing one suffix and not another, and a note saying only "space them" would have been undone by the next worker who met the exception.
 
+## Have workers write their output as they go
+
+A worker that holds its whole batch until the end loses all of it when the run dies — and runs do die, on session limits and transient API errors. Tell each worker to write a partial deliverable early and rewrite it as it progresses. Two workers on the same range were interrupted in one session: the one that wrote incrementally left 61 usable rows behind, the one that did not left nothing.
+
+The salvage is cheap once the file exists. Diff the delivered ids against the assigned range, and re-assign only the gap — a fresh worker finishing 56 rows costs a fraction of redoing 117, and it can read the interrupted worker's own output for continuity.
+
+Verify what an interrupted worker delivered before trusting it. Its self-check is the last thing it does, so a partial file has never been checked. In that same session the interrupted output carried protected-token errors that the completed one did not.
+
+## Escaping in the deliverable is not the same as escaping in the text
+
+When workers return structured output, the deliverable format has its own escaping, and it silently competes with the game's. A workspace that stores a line break as the two characters backslash-n needs those two characters written as four in a JSON string; a worker writing the obvious one produces a real newline and fails validation.
+
+It is not a translation judgment, so care and source-reading do not prevent it — three workers in a row made the identical mistake. State the deliverable-level form explicitly in the brief, and check it mechanically at merge: it is invisible in a diff and obvious to a script.
+
 ## Correcting a worker that is already running
 
 Send the decision, not the repair. A message saying "the file currently says X and I am fixing it to Y" is self-invalidating: by the time the worker reads it you have made the fix, the worker checks, finds Y, and concludes your message was false. One worker did exactly that and reported the coordinator's message as a possible impersonation attempt — correct instinct, wrong conclusion, and it wasted the worker's time. Say what the value is now.
