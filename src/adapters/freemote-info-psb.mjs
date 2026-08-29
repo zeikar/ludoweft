@@ -19,6 +19,7 @@ import {
 import { localizedStringArrayHandler } from './freemote/handlers/localized-string-array.mjs';
 import { magesScenarioHandler } from './freemote/handlers/mages-scenario.mjs';
 import { perLanguageDocumentHandler } from './freemote/handlers/per-language-document.mjs';
+import { sharedStringArrayHandler } from './freemote/handlers/shared-string-array.mjs';
 import { applyMutation } from './freemote/mutations.mjs';
 import { createToolRunner, resolveFreeMoteTools } from './freemote/tool-runner.mjs';
 
@@ -26,6 +27,7 @@ const HANDLERS = new Map([
   [magesScenarioHandler.id, magesScenarioHandler],
   [localizedStringArrayHandler.id, localizedStringArrayHandler],
   [perLanguageDocumentHandler.id, perLanguageDocumentHandler],
+  [sharedStringArrayHandler.id, sharedStringArrayHandler],
 ]);
 
 function isRecord(value) {
