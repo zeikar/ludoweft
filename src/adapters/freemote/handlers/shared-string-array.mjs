@@ -19,11 +19,17 @@ function resolvePointer(document, pointer, label) {
   return value;
 }
 
-// Some documents store one string per entry and show it in every language — a speaker name
-// table read by the message system, for example. There is no reference slot to compare
+// Some documents store one string per entry with no language axis at all — a MAGES title
+// keeps its speaker-name list that way, one Japanese string per entry, while the scenario
+// beside it carries four language slots per line. There is no reference slot to compare
 // against, so the source doubles as the reference and a translation replaces the only copy
 // the game has. That makes the edit visible in the original language too; a project should
 // decide that deliberately before adding a resource here.
+//
+// Confirm the strings actually reach the screen before translating them. A document like
+// this can be loaded and still not be what the renderer draws from — the same text often
+// exists in the scenario as well, and a screen may be a pre-rendered per-language image
+// that no text edit can touch.
 export const sharedStringArrayHandler = {
   id: 'shared-string-array',
 

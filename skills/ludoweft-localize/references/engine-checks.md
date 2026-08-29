@@ -22,6 +22,18 @@ Put the probe in the first line of the game, so verifying costs seconds rather t
 
 Mark every probe in its `note` field, keep the count to a handful, and revert them once the answer is in. A probe left behind ships as a translation.
 
+## Untranslated text on screen is not always a missed resource
+
+When a player reports text still in the original language, find where the renderer reads it before adding a resource for it. Three different things look identical from the player's seat:
+
+- **A resource nobody extracted.** The fix is a resource definition.
+- **A document that is loaded but not drawn from.** The same text often lives in two places — a scenario line and a name table beside it — and only one reaches that screen. Translating the wrong one changes nothing and looks like the patch failed.
+- **A pre-rendered image.** Some engines ship one image per language for text-heavy screens; a title doing this had them beside the ordinary art, distinguished only by a language suffix on the filename. No text edit can reach those.
+
+The cheapest way to tell them apart is a distinctive string from the screen — a post id, a handle, a serial number — searched across every archive. If it appears in no text resource at all while the screen shows it localized, it is rendered art.
+
+A screenshot settles in seconds what static analysis argues about for an hour. Ask for one.
+
 ## Record what the run taught
 
 Write engine behaviour to `ludoweft/engine-notes.md` in the project, beside the glossary and style rules: markup the engine understands, font faces and how they are remapped, tags whose display text is localized, control codes, and anything a build silently drops. State which findings were verified in-game and which are inferred.
