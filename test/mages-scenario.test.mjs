@@ -14,9 +14,9 @@ function document() {
     scenes: [
       {
         texts: [
-          ['倫太郎', [[null, 'なんだと！？', 16], ['倫太郎', '"What!?"', 16]]],
-          ['', [[null, '右耳に当てているケータイ電話。', 16], [null, 'The phone against my right ear.', 16]]],
-          ['まゆり', [[null, 'トゥットゥルー', 16], ['まゆり', '"Tuturu!"', 16]]],
+          ['少年', [[null, 'なんだって！？', 16], ['少年', '"What now!?"', 16]]],
+          ['', [[null, '窓の外はもう暗くなっていた。', 16], [null, 'It was already dark outside the window.', 16]]],
+          ['少女', [[null, 'ふわわーい', 16], ['少女', '"Fuwawai!"', 16]]],
         ],
       },
     ],
@@ -26,11 +26,11 @@ function document() {
 test('a dialogue segment carries its speaker in context', () => {
   const segments = magesScenarioHandler.segments(document(), CONTEXT);
   const line = segments.find((s) => s.id === 'ch01.ks#s0:t0');
-  assert.equal(line.context.speaker, '倫太郎');
+  assert.equal(line.context.speaker, '少年');
   assert.deepEqual(line.context, {
-    archive: 'story', file: 'ch01.ks', scene: 0, text: 0, speaker: '倫太郎',
+    archive: 'story', file: 'ch01.ks', scene: 0, text: 0, speaker: '少年',
   });
-  assert.equal(segments.find((s) => s.id === 'ch01.ks#s0:t2').context.speaker, 'まゆり');
+  assert.equal(segments.find((s) => s.id === 'ch01.ks#s0:t2').context.speaker, '少女');
 });
 
 // Absence means the line carries no new speaker header. Callers still have to read it in
@@ -47,8 +47,8 @@ test('a line with no speaker header carries no speaker key at all, rather than a
 
 test('the speaker does not disturb the fields a build depends on', () => {
   const [line] = magesScenarioHandler.segments(document(), CONTEXT);
-  assert.equal(line.source, 'なんだと！？');
-  assert.equal(line.reference, '"What!?"');
+  assert.equal(line.source, 'なんだって！？');
+  assert.equal(line.reference, '"What now!?"');
   assert.equal(line.protectedTokenSource, 'reference');
   assert.equal(line.protectedTokenProfile, 'mages');
   line.write('뭐라고!?');
