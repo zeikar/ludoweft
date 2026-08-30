@@ -416,6 +416,46 @@ test('archive output paths reject normalized case-insensitive collisions', () =>
   );
 }));
 
+test('translation output paths reject normalized case-insensitive collisions before export', () => withFixture(
+  ({ root, project }) => {
+    const menuArchive = project.config.adapterConfig.archives[1];
+    menuArchive.resources.push({
+      handler: 'mages-scenario',
+      include: ['alternate.scn.m.json'],
+      translationDirectory: 'NARRATIVE',
+    });
+    writeJson(
+      path.join(root, '.ludoweft/work/extracted/menu-vault_full/widget-objects/alternate.scn.m.json'),
+      {
+        name: 'prologue.route',
+        scenes: [{ texts: [['Guide', [[0, 'Autre'], [1, 'Another']]]] }],
+      },
+    );
+
+    assert.throws(
+      () => freeMoteInfoPsb.export(project),
+      /translation output path collision between story-vault\/prologue\.route\.scn\.m\.json and menu-vault\/alternate\.scn\.m\.json/,
+    );
+  },
+));
+
+test('resources with no translatable segments do not reserve a translation output path', () => withFixture(
+  ({ root, project }) => {
+    const menuArchive = project.config.adapterConfig.archives[1];
+    menuArchive.resources.push({
+      handler: 'mages-scenario',
+      include: ['empty.scn.m.json'],
+      translationDirectory: 'NARRATIVE',
+    });
+    writeJson(
+      path.join(root, '.ludoweft/work/extracted/menu-vault_full/widget-objects/empty.scn.m.json'),
+      { name: 'prologue.route', scenes: [] },
+    );
+
+    assert.doesNotThrow(() => freeMoteInfoPsb.export(project));
+  },
+));
+
 test('modified resources cannot overwrite the same raw archive destination', () => withFixture(({ project }) => {
   freeMoteInfoPsb.export(project);
   const mutations = project.config.adapterConfig.mutations;

@@ -279,6 +279,7 @@ function documentsFor(project) {
   const config = configFor(project);
   const documents = [];
   const byKey = new Map();
+  const translationDestinations = [];
   for (const archive of config.archives) {
     const full = archiveRoots(project, archive).full;
     const entryRoot = safeJoin(full, archive.entryDirectory, `archive ${archive.id} entryDirectory`);
@@ -303,10 +304,20 @@ function documentsFor(project) {
         const jsonFile = safeJoin(entryRoot, file, 'resource file');
         const document = readJson(jsonFile);
         const handlerContext = { archive: archive.id, file, resource, slots: config.languageSlots };
+        const segments = handler.segments(document, handlerContext);
         const translationName = handler.translationName(document, handlerContext);
+        const translationOutput = path.join(resource.translationDirectory, translationName);
+        const relativeTranslation = segments.length > 0
+          ? registerRelativeDestination(
+            translationDestinations,
+            translationOutput,
+            key,
+            'translation output path',
+          )
+          : translationOutput;
         const translationFile = safeJoin(
           project.paths.translations,
-          path.join(resource.translationDirectory, translationName),
+          relativeTranslation,
           'translation file',
         );
         const record = {
@@ -320,7 +331,7 @@ function documentsFor(project) {
           document,
           rawName: handler.rawName(document, handlerContext),
           translationFile,
-          segments: handler.segments(document, handlerContext),
+          segments,
         };
         documents.push(record);
         byKey.set(key, record);

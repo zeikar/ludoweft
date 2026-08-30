@@ -123,17 +123,21 @@ test('the MAGES token profile keeps escaped double-percent controls distinct', (
 });
 
 test('a MAGES scenario tag protects its structure and leaves its display text translatable', () => {
-  const reference = '"What!? <tips,1,The Organization> is already moving?"';
-  assert.deepEqual(extractProtectedTokens(reference, 'mages'), ['<tips,1,']);
+  const reference = 'Open <xref,1,Archive Entry> now.';
+  assert.deepEqual(extractProtectedTokens(reference, 'mages'), ['<xref,1,', '>']);
   // a tag that carries no localized field is still claimed whole
   assert.deepEqual(extractProtectedTokens('<br> and <i>x</i>', 'mages'), ['</i>', '<br>', '<i>']);
   // the default profile keeps its previous behaviour
-  assert.deepEqual(extractProtectedTokens(reference, 'default'), ['<tips,1,The Organization>']);
+  assert.deepEqual(extractProtectedTokens(reference, 'default'), ['<xref,1,Archive Entry>']);
 
   assert.deepEqual(
-    compareProtectedTokens(reference, '"뭐라고!? <tips,1,기관>이 벌써 움직이고 있다고?"', 'mages'),
+    compareProtectedTokens(reference, 'Use <xref,1,Translated Entry> now.', 'mages'),
     [],
   );
-  assert.ok(compareProtectedTokens(reference, '"뭐라고!? 기관이 벌써 움직이고 있다고?"', 'mages')
-    .some((error) => /missing protected token <tips,1,/.test(error)));
+  assert.ok(compareProtectedTokens(reference, 'Use Translated Entry now.', 'mages')
+    .some((error) => /missing protected token <xref,1,/.test(error)));
+  assert.ok(compareProtectedTokens(reference, 'Use <xref,1,Translated Entry now.', 'mages')
+    .some((error) => /missing protected token >/.test(error)));
+  assert.ok(compareProtectedTokens(reference, 'Use <xref,1,Translated Entry>> now.', 'mages')
+    .some((error) => /protected token/.test(error)));
 });

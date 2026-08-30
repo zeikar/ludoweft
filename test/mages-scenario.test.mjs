@@ -14,9 +14,9 @@ function document() {
     scenes: [
       {
         texts: [
-          ['少年', [[null, 'なんだって！？', 16], ['少年', '"What now!?"', 16]]],
-          ['', [[null, '窓の外はもう暗くなっていた。', 16], [null, 'It was already dark outside the window.', 16]]],
-          ['少女', [[null, 'ふわわーい', 16], ['少女', '"Fuwawai!"', 16]]],
+          ['Speaker A', [[null, 'Source line A', 16], ['Speaker A', 'Reference line A', 16]]],
+          ['', [[null, 'Source narration', 16], [null, 'Reference narration', 16]]],
+          ['Speaker B', [[null, 'Source line B', 16], ['Speaker B', 'Reference line B', 16]]],
         ],
       },
     ],
@@ -26,11 +26,11 @@ function document() {
 test('a dialogue segment carries its speaker in context', () => {
   const segments = magesScenarioHandler.segments(document(), CONTEXT);
   const line = segments.find((s) => s.id === 'ch01.ks#s0:t0');
-  assert.equal(line.context.speaker, '少年');
+  assert.equal(line.context.speaker, 'Speaker A');
   assert.deepEqual(line.context, {
-    archive: 'story', file: 'ch01.ks', scene: 0, text: 0, speaker: '少年',
+    archive: 'story', file: 'ch01.ks', scene: 0, text: 0, speaker: 'Speaker A',
   });
-  assert.equal(segments.find((s) => s.id === 'ch01.ks#s0:t2').context.speaker, '少女');
+  assert.equal(segments.find((s) => s.id === 'ch01.ks#s0:t2').context.speaker, 'Speaker B');
 });
 
 // Absence means the line carries no new speaker header. Callers still have to read it in
@@ -47,10 +47,10 @@ test('a line with no speaker header carries no speaker key at all, rather than a
 
 test('the speaker does not disturb the fields a build depends on', () => {
   const [line] = magesScenarioHandler.segments(document(), CONTEXT);
-  assert.equal(line.source, 'なんだって！？');
-  assert.equal(line.reference, '"What now!?"');
+  assert.equal(line.source, 'Source line A');
+  assert.equal(line.reference, 'Reference line A');
   assert.equal(line.protectedTokenSource, 'reference');
   assert.equal(line.protectedTokenProfile, 'mages');
-  line.write('뭐라고!?');
+  line.write('Target line A');
   assert.equal(line.id, 'ch01.ks#s0:t0');
 });

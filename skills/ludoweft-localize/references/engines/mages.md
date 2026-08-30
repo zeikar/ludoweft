@@ -43,7 +43,7 @@ Without it the generic patterns apply and both failures the profile exists to pr
 
 ## Cross-reference tags
 
-Scenario text carries tags of the form `<name,index,display>`. The display field is localized along with the rest of the line; the structural head is not. The `mages` protected-token profile claims `<name,index,` for exactly this reason — protecting the whole tag would force the reference language into every target. It only applies where the resource actually uses the profile; see the section above.
+Scenario text carries tags of the form `<name,index,display>`. The display field is localized along with the rest of the line; the structural head and closing `>` are not. The `mages` protected-token profile claims `<name,index,` and the closing delimiter separately for exactly this reason — protecting the whole tag would force the reference language into every target, while leaving the delimiter unprotected would let a malformed tag pass validation. It only applies where the resource actually uses the profile; see the section above.
 
 The index in these tags may not share the origin of an index-conversion table in the resource the tag points at. One shipped title uses 1-based tags against 0-based table indices. Check the offset against a known pair rather than assuming.
 

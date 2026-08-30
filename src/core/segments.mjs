@@ -29,7 +29,7 @@ function isRecord(value) {
 }
 
 // Counts non-overlapping tokens so `{{name}}` is claimed whole instead of also yielding `{name}`.
-function protectedTokenPatterns(profile) {
+function protectedTokenMatchers(profile) {
   if (!PROTECTED_TOKEN_PROFILES.includes(profile)) {
     throw new Error(`unknown protected token profile: ${profile}`);
   }
@@ -42,11 +42,24 @@ function protectedTokenPatterns(profile) {
     // and by another control (for example `%CContinue%p`). Claim them before the
     // generic percent-wrapped placeholder pattern so it cannot join both controls.
     // A MAGES scenario tag carries its display text as its last field
-    // (`<tips,1,The Organization>`) and that text is localized with the rest of the line.
-    // Claim only the structural head, or the generic tag pattern below takes the whole tag
-    // and forces the reference language into every target that keeps the reference.
+    // (`<xref,1,Archive Entry>`) and that text is localized with the rest of the line.
+    // Claim the structural head and closing delimiter separately. The generic tag pattern
+    // below would otherwise take the whole tag and force the reference-language display text
+    // into every target that keeps the reference.
     ...(profile === 'mages'
-      ? [/%%[Cp]/g, /%[Cp]/g, /<[A-Za-z][A-Za-z0-9_]*(?:,\d+)+,/g]
+      ? [
+        /%%[Cp]/g,
+        /%[Cp]/g,
+        /<[A-Za-z][A-Za-z0-9_]*(?:,\d+)+,/g,
+        {
+          pattern: /<[A-Za-z][A-Za-z0-9_]*(?:,\d+)+,[^<>]*(>+)/g,
+          token(match) { return match[1]; },
+          range(match) {
+            const end = match.index + match[0].length;
+            return [end - match[1].length, end];
+          },
+        },
+      ]
       : []),
     /%[A-Za-z0-9_]+%/g,
     /<\/?[A-Za-z][^>]*>/g,
@@ -57,15 +70,18 @@ function protectedTokenPatterns(profile) {
 function countProtectedTokens(text, profile = 'default') {
   const counts = new Map();
   if (typeof text !== 'string') return counts;
-  const patterns = protectedTokenPatterns(profile);
+  const matchers = protectedTokenMatchers(profile);
   const claimed = [];
-  for (const pattern of patterns) {
+  for (const matcher of matchers) {
+    const pattern = matcher instanceof RegExp ? matcher : matcher.pattern;
     for (let match = pattern.exec(text); match; match = pattern.exec(text)) {
-      const start = match.index;
-      const end = start + match[0].length;
+      const [start, end] = matcher instanceof RegExp
+        ? [match.index, match.index + match[0].length]
+        : matcher.range(match);
       if (claimed.some(([from, to]) => start < to && end > from)) continue;
       claimed.push([start, end]);
-      counts.set(match[0], (counts.get(match[0]) ?? 0) + 1);
+      const token = matcher instanceof RegExp ? match[0] : matcher.token(match);
+      counts.set(token, (counts.get(token) ?? 0) + 1);
     }
   }
   return counts;
