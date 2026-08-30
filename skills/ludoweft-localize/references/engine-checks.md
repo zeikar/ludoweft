@@ -56,3 +56,15 @@ A new engine file is a welcome contribution. Follow what the existing entries al
 - Mark anything confirmed by running the game as **Verified in-game:** and leave the rest plainly stated as inference. That distinction is the most valuable thing in an engine file.
 
 Describing markup is a documentation change. Teaching the CLI a new protected-token profile is not: profile names are a fixed allowlist in the core, so a new one needs a code change and a test rather than a reference file.
+
+## A validated workspace can still break the game
+
+Every gate ludoweft has is about *structure* — tokens preserved, codes intact, documents the right shape. None of them ask whether the target font can draw the characters you used.
+
+When a project writes one language into another language's slot, the text is drawn with **that slot's font**, not the source language's. A character the source uses freely may simply be absent. What happens then is not a missing glyph in otherwise fine text: in one title a full-width `＠` in three lines hung the chapter load on a black screen, and a mail subject consisting only of full-width `！` left the list unable to measure its own row. Both passed protected tokens, escapes, control codes, tag balance, document shape and the built archive. Nothing was malformed.
+
+The test is one line: **count each character of every target across the entire reference text.** A character that appears zero times there was never asked of that font, and is a guess. Extract the character set of every `reference` in the workspace, subtract it and the target language's own script from the union of every `target`, and read what is left.
+
+Expect the residue to contain safe entries too — typographic marks the reference happens not to use, characters proven by a screen you have already seen. Mark those as verified with the reason, so the list shrinks to what is genuinely unknown and stays worth reading.
+
+Where the shipped localization already faced the same character, it has answered the question for you. In that title the English wrote `orz`, `XX`, `warai` and `! ! !` where the Japanese had full-width forms, and every one of those was a rendering decision the Korean should have copied rather than a stylistic one it could ignore.
