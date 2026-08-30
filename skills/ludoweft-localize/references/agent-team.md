@@ -90,9 +90,11 @@ The coordinator owns merges, `validate`, glossary adoption, and the build stages
 
 Delegating validation defeats it. A worker that writes a batch and then validates its own batch reports the result it was hoping for.
 
-**Segments that share a source must share a target.** Group every translated row by its source text and flag any group whose targets disagree. It is the cheapest cross-file consistency check there is: it needs no glossary, no term list and no judgment, and it finds exactly the divergence that matters — the same line, rendered two ways, in a game that will show both.
+**Segments that share a source must share a target.** Group every translated row by its source text and flag any group whose targets disagree. It is the cheapest cross-file consistency check there is: it needs no glossary and no term list, and it finds exactly the divergence that matters — the same line, rendered two ways, in a game that will show both.
 
 A repeated block is where it lands. One title had a three-line scene appearing in two files; two workers who could not see each other produced identical text for the first and third lines and different text for the second. Nothing else would have caught it — no term was involved, both readings were good Korean, and both files validated clean.
+
+Read the groups rather than auto-unifying them. A shared source can legitimately diverge when something outside the source separates the two rows — a different speaker, or a shipped reference translation that read them differently. In one workspace three rows shared a one-word source: two were the same character saying the same thing in two files and had to match, and the third was a different character whose reference rendered it differently, and unifying that one would have flattened a distinction the original localization had drawn.
 
 Run it after each merge alongside `validate`. Thirteen shared-source groups across the whole workspace took one pass to check.
 
